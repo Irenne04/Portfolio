@@ -270,9 +270,10 @@ function FHNSingleCell() {
   // Initial conditions: resting state near (0, 0)
   const stateRef = useRef({vv:0.0, ww:0.0, vH:[], wH:[]});
   const [isRunning, setIsRunning] = useState(false);
-  // Cardiac FHN parameters (Rogers-McCulloch defaults)
-  // c1=0.26 ms⁻¹, c2=0.1 ms⁻¹, a=0.13 (threshold), b=0.013 ms⁻¹, eps=0.013 ms⁻¹, I in [0,0.5]
-  const [params, setParams] = useState({c1:0.26, c2:0.1, a:0.13, b:0.013, eps:0.013, I:0.10});
+  // c1=c2=1 fixed (scaling constants). Free params:
+  // a ∈ (−1,1): threshold position. b > 0: recovery speed of w. ε ≪ 1: timescale separation. I: external current.
+  const C1 = 1, C2 = 1;
+  const [params, setParams] = useState({a:0.13, b:0.5, eps:0.01, I:0.0});
   const paramsRef = useRef(params);
   useEffect(() => { paramsRef.current = params; }, [params]);
 
@@ -286,18 +287,18 @@ function FHNSingleCell() {
     const canvas = ref.current; if(!canvas) return;
     const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
-    const {c1, c2, a, b, eps, I} = paramsRef.current;
+    const {a, b, eps, I} = paramsRef.current;
     const st = stateRef.current;
 
-    // RK4 integration — more stable than Euler for stiff cardiac FHN
-    const dt = 0.5; // ms
+    // RK4 — c1=c2=1 fixed
+    const dt = 0.5;
     for(let s = 0; s < 4; s++){
-      const fv = (v,w) => c1*v*(1-v)*(v-a) - c2*w + I;
+      const fv = (v,w) => C1*v*(1-v)*(v-a) - C2*w + I;
       const fw = (v,w) => eps*(v - b*w);
-      const k1v = fv(st.vv, st.ww),           k1w = fw(st.vv, st.ww);
-      const k2v = fv(st.vv+dt/2*k1v, st.ww+dt/2*k1w), k2w = fw(st.vv+dt/2*k1v, st.ww+dt/2*k1w);
-      const k3v = fv(st.vv+dt/2*k2v, st.ww+dt/2*k2w), k3w = fw(st.vv+dt/2*k2v, st.ww+dt/2*k2w);
-      const k4v = fv(st.vv+dt*k3v, st.ww+dt*k3w),     k4w = fw(st.vv+dt*k3v, st.ww+dt*k3w);
+      const k1v = fv(st.vv, st.ww),                     k1w = fw(st.vv, st.ww);
+      const k2v = fv(st.vv+dt/2*k1v, st.ww+dt/2*k1w),  k2w = fw(st.vv+dt/2*k1v, st.ww+dt/2*k1w);
+      const k3v = fv(st.vv+dt/2*k2v, st.ww+dt/2*k2w),  k3w = fw(st.vv+dt/2*k2v, st.ww+dt/2*k2w);
+      const k4v = fv(st.vv+dt*k3v,   st.ww+dt*k3w),     k4w = fw(st.vv+dt*k3v,   st.ww+dt*k3w);
       st.vv += dt/6*(k1v+2*k2v+2*k3v+k4v);
       st.ww += dt/6*(k1w+2*k2w+2*k3w+k4w);
       st.vH.push(st.vv); st.wH.push(st.ww);
@@ -331,10 +332,10 @@ function FHNSingleCell() {
     ctx.setLineDash([]);
 
     // ── RIGHT: phase plane (v horizontal, w vertical) ──
-    // v ∈ [−0.1, 1.1], w ∈ [−0.02, 0.08]
+    // v ∈ [−0.15, 1.15]; w window wide enough for w-nullcline w=v/b (b~0.5 → w_max~1/0.5=2 → clip at 0.4)
     const ppL = half + PAD, ppR = W - PAD, ppT = PAD, ppB = H - PAD;
     const ppW = ppR - ppL, ppH2 = ppB - ppT;
-    const wMin = -0.02, wMax = 0.08;
+    const wMin = -0.05, wMax = 0.4;
     const ppX = v => ppL + ((v - vMin)/(vMax - vMin))*ppW;
     const ppY = w => ppB - ((w - wMin)/(wMax - wMin))*ppH2;
 
@@ -343,24 +344,24 @@ function FHNSingleCell() {
     ctx.beginPath(); ctx.moveTo(ppX(0),ppT); ctx.lineTo(ppX(0),ppB); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(ppL,ppY(0)); ctx.lineTo(ppR,ppY(0)); ctx.stroke();
 
-    // v-nullcline: w = [c1·v·(1−v)·(v−a) + I] / c2   (amber)
-    ctx.strokeStyle='rgba(230,185,106,0.55)'; ctx.lineWidth=1.2; ctx.setLineDash([4,4]);
+    // v-nullcline: w = [v(1−v)(v−a) + I] / 1   (c1=c2=1)  →  w = v(1−v)(v−a) + I
+    ctx.strokeStyle='rgba(230,185,106,0.65)'; ctx.lineWidth=1.4; ctx.setLineDash([4,4]);
     ctx.beginPath();
     let firstNC = true;
-    for(let vi=vMin; vi<=vMax; vi+=0.01){
-      const wn = (c1*vi*(1-vi)*(vi-a) + I) / c2;
-      if(wn < wMin-0.02 || wn > wMax+0.02){ firstNC=true; continue; }
+    for(let vi=vMin; vi<=vMax; vi+=0.005){
+      const wn = C1*vi*(1-vi)*(vi-a) + I;   // c2=1 → divide by 1
+      if(wn < wMin-0.05 || wn > wMax+0.05){ firstNC=true; continue; }
       firstNC ? ctx.moveTo(ppX(vi),ppY(wn)) : ctx.lineTo(ppX(vi),ppY(wn));
       firstNC=false;
     }
     ctx.stroke();
 
     // w-nullcline: w = v / b   (lavender)
-    ctx.strokeStyle='rgba(167,139,202,0.55)'; ctx.lineWidth=1.2;
+    ctx.strokeStyle='rgba(167,139,202,0.65)'; ctx.lineWidth=1.4;
     ctx.beginPath(); firstNC=true;
-    for(let vi=vMin; vi<=vMax; vi+=0.01){
+    for(let vi=vMin; vi<=vMax; vi+=0.005){
       const wn = vi / b;
-      if(wn < wMin-0.02 || wn > wMax+0.02){ firstNC=true; continue; }
+      if(wn < wMin-0.05 || wn > wMax+0.05){ firstNC=true; continue; }
       firstNC ? ctx.moveTo(ppX(vi),ppY(wn)) : ctx.lineTo(ppX(vi),ppY(wn));
       firstNC=false;
     }
@@ -405,13 +406,12 @@ function FHNSingleCell() {
     setParams(next);
   };
 
+  // c1=c2=1 fixed — only expose the 4 free parameters
   const sliders = [
-    ['I — Ext. stimulus',  'I',   0,    0.5,  0.005, 3],
-    ['a — Threshold',      'a',   0.05, 0.25, 0.005, 3],
-    ['c₁ — Excitation',   'c1',  0.1,  0.5,  0.01,  2],
-    ['c₂ — Inhibition',   'c2',  0.05, 0.3,  0.005, 3],
-    ['ε — Recovery rate',  'eps', 0.005,0.05, 0.001, 3],
-    ['b — Recovery decay', 'b',   0.005,0.04, 0.001, 3],
+    ['I — External current', 'I',   -0.5,  0.5,  0.01,  2],  // I: drives excitation
+    ['a — Threshold  (−1,1)','a',   -0.9,  0.9,  0.01,  2],  // a ∈ (−1,1)
+    ['b — Recovery speed',   'b',    0.1,  2.0,  0.05,  2],  // b > 0
+    ['ε — Timescale  (≪1)',  'eps',  0.001,0.1,  0.001, 3],  // ε ≪ 1
   ];
 
   return (
@@ -426,7 +426,7 @@ function FHNSingleCell() {
           <div className="sim-overlay">
             <div className="sim-overlay-icon">♡</div>
             <div className="sim-overlay-txt">Cardiac FHN · phase portrait + nullclines</div>
-            <div className="sim-overlay-code">dv/dt = c₁v(1−v)(v−a) − c₂w + I</div>
+            <div className="sim-overlay-code">dv/dt = v(1−v)(v−a) − w + I  |  c₁=c₂=1</div>
           </div>
         )}
       </div>
@@ -446,9 +446,9 @@ function FHNSingleCell() {
         </button>
       </div>
       <div className="sim-hint">
-        <span className="sim-hint-kw">// Cardiac formulation:</span> v ∈ [0,1] normalised potential.
-        Vary <b>I</b> past threshold for AP firing. Nullclines update live.
-        RK4 integration · dt = 0.5 ms.
+        <span className="sim-hint-kw">// c₁ = c₂ = 1 fixed.</span> v ∈ [0,1] normalised potential.
+        Vary <b>I</b> past threshold <b>a</b> for AP firing. Keep <b>ε ≪ 1</b> for timescale separation.
+        Nullclines update live · RK4 · dt = 0.5 ms.
       </div>
     </div>
   );

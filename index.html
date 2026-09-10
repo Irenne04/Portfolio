@@ -393,27 +393,33 @@ function FHNSingleCell() {
   );
 }
 
-/* ── PROJECT 2: Autoplay loop video — wavefront propagation ── */
+/* ── PROJECT 2: Manual-loop video — wavefront propagation ── */
 function WavefrontVideoPlayer() {
   const ref = useRef(null);
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
     v.load();
-    const play = () => v.play().catch(() => {});
-    v.addEventListener('canplay', play, { once: true });
-    return () => v.removeEventListener('canplay', play);
+    const onCanPlay = () => v.play().catch(() => {});
+    const onEnded   = () => { v.currentTime = 0; v.play().catch(() => {}); };
+    v.addEventListener('canplay', onCanPlay, { once: true });
+    v.addEventListener('ended',   onEnded);
+    return () => {
+      v.removeEventListener('canplay', onCanPlay);
+      v.removeEventListener('ended',   onEnded);
+    };
   }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// 2D WAVEFRONT — SIGNAL PROPAGATION</div>
       <video
         ref={ref}
-        autoPlay loop muted playsInline preload="auto"
+        autoPlay muted playsInline controls preload="auto"
         style={{width:'100%', display:'block', background:'#000',
                 border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
+        onEnded={e => { e.target.currentTime = 0; e.target.play().catch(() => {}); }}
       >
-        <source src="assets/wavefront.mp4" type="video/mp4" />
+        <source src="assets/wavefront.mp4"  type="video/mp4" />
         <source src="assets/wavefront.webm" type="video/webm" />
         Your browser does not support the video tag.
       </video>
@@ -425,27 +431,33 @@ function WavefrontVideoPlayer() {
   );
 }
 
-/* ── PROJECT 3: Autoplay loop video — ECG cardiac dipole reconstruction ── */
+/* ── PROJECT 3: Manual-loop video — ECG cardiac dipole reconstruction ── */
 function ECGVideoPlayer() {
   const ref = useRef(null);
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
     v.load();
-    const play = () => v.play().catch(() => {});
-    v.addEventListener('canplay', play, { once: true });
-    return () => v.removeEventListener('canplay', play);
+    const onCanPlay = () => v.play().catch(() => {});
+    const onEnded   = () => { v.currentTime = 0; v.play().catch(() => {}); };
+    v.addEventListener('canplay', onCanPlay, { once: true });
+    v.addEventListener('ended',   onEnded);
+    return () => {
+      v.removeEventListener('canplay', onCanPlay);
+      v.removeEventListener('ended',   onEnded);
+    };
   }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// ECG — CARDIAC DIPOLE RECONSTRUCTION</div>
       <video
         ref={ref}
-        autoPlay loop muted playsInline preload="auto"
+        autoPlay muted playsInline controls preload="auto"
         style={{width:'100%', display:'block', background:'#000',
                 border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
+        onEnded={e => { e.target.currentTime = 0; e.target.play().catch(() => {}); }}
       >
-        <source src="assets/ecg_dipole.mp4" type="video/mp4" />
+        <source src="assets/ecg_dipole.mp4"  type="video/mp4" />
         <source src="assets/ecg_dipole.webm" type="video/webm" />
         Your browser does not support the video tag.
       </video>

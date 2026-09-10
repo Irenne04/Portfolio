@@ -395,15 +395,28 @@ function FHNSingleCell() {
 
 /* ── PROJECT 2: Autoplay loop video — wavefront propagation ── */
 function WavefrontVideoPlayer() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.load();
+    const play = () => v.play().catch(() => {});
+    v.addEventListener('canplay', play, { once: true });
+    return () => v.removeEventListener('canplay', play);
+  }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// 2D WAVEFRONT — SIGNAL PROPAGATION</div>
       <video
-        src="assets/wavefront.mp4"
-        autoPlay loop muted playsInline
+        ref={ref}
+        autoPlay loop muted playsInline preload="auto"
         style={{width:'100%', display:'block', background:'#000',
                 border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
-      />
+      >
+        <source src="assets/wavefront.mp4" type="video/mp4" />
+        <source src="assets/wavefront.webm" type="video/webm" />
+        Your browser does not support the video tag.
+      </video>
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
         <span className="sim-hint-kw">// FHN 2D numerical simulation.</span> Isotropic and anisotropic
         meshes — wavefront propagation and spiral wave formation.
@@ -414,15 +427,28 @@ function WavefrontVideoPlayer() {
 
 /* ── PROJECT 3: Autoplay loop video — ECG cardiac dipole reconstruction ── */
 function ECGVideoPlayer() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.load();
+    const play = () => v.play().catch(() => {});
+    v.addEventListener('canplay', play, { once: true });
+    return () => v.removeEventListener('canplay', play);
+  }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// ECG — CARDIAC DIPOLE RECONSTRUCTION</div>
       <video
-        src="assets/ecg_dipole.mp4"
-        autoPlay loop muted playsInline
+        ref={ref}
+        autoPlay loop muted playsInline preload="auto"
         style={{width:'100%', display:'block', background:'#000',
                 border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
-      />
+      >
+        <source src="assets/ecg_dipole.mp4" type="video/mp4" />
+        <source src="assets/ecg_dipole.webm" type="video/webm" />
+        Your browser does not support the video tag.
+      </video>
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
         <span className="sim-hint-kw">// Synthetic ECG via central cardiac dipole formalism.</span> P–QRS–T
         morphology reconstructed from the 2D FHN tissue dipole vector (TFM Chapter 4).

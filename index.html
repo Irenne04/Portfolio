@@ -260,15 +260,20 @@ function HeroCanvas() {
   return React.createElement('canvas',{ref,id:'hero-canvas'});
 }
 
-/* ── PROJECT 1: FHN Single Cell
+/* ── PROJECT 1: FHN Single Cell — cardiac formulation
+   dv/dt = c1·v·(1−v)·(v−a) − c2·w + I
+   dw/dt = ε·(v − b·w)
+   v ∈ [0,1] normalised membrane potential
    paramsRef pattern: sliders stay live while simulation runs ── */
 function FHNSingleCell() {
   const ref = useRef(null), anim = useRef(null), running = useRef(false);
-  const stateRef = useRef({vv:-1.2, ww:-0.6, vH:[], wH:[]});
+  // Initial conditions: resting state near (0, 0)
+  const stateRef = useRef({vv:0.0, ww:0.0, vH:[], wH:[]});
   const [isRunning, setIsRunning] = useState(false);
-  const [params, setParams] = useState({I:0.5, a:0.13, b:0.013, eps:0.009});
+  // Cardiac FHN parameters (Rogers-McCulloch defaults)
+  // c1=0.26 ms⁻¹, c2=0.1 ms⁻¹, a=0.13 (threshold), b=0.013 ms⁻¹, eps=0.013 ms⁻¹, I in [0,0.5]
+  const [params, setParams] = useState({c1:0.26, c2:0.1, a:0.13, b:0.013, eps:0.013, I:0.10});
   const paramsRef = useRef(params);
-  // Keep paramsRef in sync so the animation loop always reads latest values
   useEffect(() => { paramsRef.current = params; }, [params]);
 
   const stop = useCallback(() => {
@@ -281,58 +286,112 @@ function FHNSingleCell() {
     const canvas = ref.current; if(!canvas) return;
     const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
-    // Always read from paramsRef — not stale closure params
-    const {I, a, b, eps} = paramsRef.current;
+    const {c1, c2, a, b, eps, I} = paramsRef.current;
     const st = stateRef.current;
-    const dt = 0.2;
-    for(let s=0;s<3;s++){
-      st.vv += dt*(st.vv - st.vv*st.vv*st.vv/3 - st.ww + I);
-      st.ww += dt*(eps*(st.vv + a - b*st.ww));
+
+    // RK4 integration — more stable than Euler for stiff cardiac FHN
+    const dt = 0.5; // ms
+    for(let s = 0; s < 4; s++){
+      const fv = (v,w) => c1*v*(1-v)*(v-a) - c2*w + I;
+      const fw = (v,w) => eps*(v - b*w);
+      const k1v = fv(st.vv, st.ww),           k1w = fw(st.vv, st.ww);
+      const k2v = fv(st.vv+dt/2*k1v, st.ww+dt/2*k1w), k2w = fw(st.vv+dt/2*k1v, st.ww+dt/2*k1w);
+      const k3v = fv(st.vv+dt/2*k2v, st.ww+dt/2*k2w), k3w = fw(st.vv+dt/2*k2v, st.ww+dt/2*k2w);
+      const k4v = fv(st.vv+dt*k3v, st.ww+dt*k3w),     k4w = fw(st.vv+dt*k3v, st.ww+dt*k3w);
+      st.vv += dt/6*(k1v+2*k2v+2*k3v+k4v);
+      st.ww += dt/6*(k1w+2*k2w+2*k3w+k4w);
       st.vH.push(st.vv); st.wH.push(st.ww);
-      if(st.vH.length>500){st.vH.shift();st.wH.shift();}
+      if(st.vH.length > 600){ st.vH.shift(); st.wH.shift(); }
     }
+
     ctx.fillStyle='#07090f'; ctx.fillRect(0,0,W,H);
+    // Grid
     ctx.strokeStyle='rgba(126,184,247,0.04)'; ctx.lineWidth=1;
     for(let g=0;g<5;g++){const y=(H/4)*g;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-    const half=W/2;
-    // v(t) trace
+
+    const half = W/2;
+    const PAD = 14;
+
+    // ── LEFT: v(t) time trace ──
+    // v ∈ [−0.1, 1.1] for display
+    const vMin=-0.1, vMax=1.1;
+    const mapVy = v => H - PAD - ((v - vMin)/(vMax - vMin))*(H - 2*PAD);
     ctx.beginPath();
     for(let i=0;i<st.vH.length;i++){
-      const x=(i/st.vH.length)*(half-10), y=H/2-(st.vH[i]/2.5)*(H/2*0.78);
-      i===0?ctx.moveTo(x+5,y):ctx.lineTo(x+5,y);
+      const x = PAD + (i/st.vH.length)*(half - 2*PAD);
+      const y = mapVy(st.vH[i]);
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
     }
-    ctx.strokeStyle='rgba(126,184,247,0.85)';ctx.lineWidth=1.5;ctx.stroke();
-    // Phase plane helpers
-    const pX=v=>half+15+((v+2)/4)*(half-25);
-    const pY=w=>H-10-((w+1)/2)*(H-20);
-    // v-nullcline (amber)
-    ctx.strokeStyle='rgba(230,185,106,0.35)';ctx.lineWidth=1;ctx.setLineDash([4,5]);
+    ctx.strokeStyle='rgba(126,184,247,0.88)'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Baseline v=0
+    ctx.beginPath(); ctx.setLineDash([3,4]);
+    ctx.moveTo(PAD, mapVy(0)); ctx.lineTo(half-PAD, mapVy(0));
+    ctx.strokeStyle='rgba(126,184,247,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── RIGHT: phase plane (v horizontal, w vertical) ──
+    // v ∈ [−0.1, 1.1], w ∈ [−0.02, 0.08]
+    const ppL = half + PAD, ppR = W - PAD, ppT = PAD, ppB = H - PAD;
+    const ppW = ppR - ppL, ppH2 = ppB - ppT;
+    const wMin = -0.02, wMax = 0.08;
+    const ppX = v => ppL + ((v - vMin)/(vMax - vMin))*ppW;
+    const ppY = w => ppB - ((w - wMin)/(wMax - wMin))*ppH2;
+
+    // Axes
+    ctx.strokeStyle='rgba(126,184,247,0.1)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(ppX(0),ppT); ctx.lineTo(ppX(0),ppB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ppL,ppY(0)); ctx.lineTo(ppR,ppY(0)); ctx.stroke();
+
+    // v-nullcline: w = [c1·v·(1−v)·(v−a) + I] / c2   (amber)
+    ctx.strokeStyle='rgba(230,185,106,0.55)'; ctx.lineWidth=1.2; ctx.setLineDash([4,4]);
     ctx.beginPath();
-    for(let vi=-2;vi<=2;vi+=0.05){const wn=vi-vi*vi*vi/3+I;vi===-2?ctx.moveTo(pX(vi),pY(wn)):ctx.lineTo(pX(vi),pY(wn));}
+    let firstNC = true;
+    for(let vi=vMin; vi<=vMax; vi+=0.01){
+      const wn = (c1*vi*(1-vi)*(vi-a) + I) / c2;
+      if(wn < wMin-0.02 || wn > wMax+0.02){ firstNC=true; continue; }
+      firstNC ? ctx.moveTo(ppX(vi),ppY(wn)) : ctx.lineTo(ppX(vi),ppY(wn));
+      firstNC=false;
+    }
     ctx.stroke();
-    // w-nullcline (lavender)
-    ctx.strokeStyle='rgba(167,139,202,0.35)';ctx.beginPath();
-    for(let vi=-2;vi<=2;vi+=0.05){const wn=(vi+a)/b;vi===-2?ctx.moveTo(pX(vi),pY(wn)):ctx.lineTo(pX(vi),pY(wn));}
+
+    // w-nullcline: w = v / b   (lavender)
+    ctx.strokeStyle='rgba(167,139,202,0.55)'; ctx.lineWidth=1.2;
+    ctx.beginPath(); firstNC=true;
+    for(let vi=vMin; vi<=vMax; vi+=0.01){
+      const wn = vi / b;
+      if(wn < wMin-0.02 || wn > wMax+0.02){ firstNC=true; continue; }
+      firstNC ? ctx.moveTo(ppX(vi),ppY(wn)) : ctx.lineTo(ppX(vi),ppY(wn));
+      firstNC=false;
+    }
     ctx.stroke(); ctx.setLineDash([]);
-    // Trajectory
+
+    // Trajectory (sage green)
     ctx.beginPath();
-    for(let i=0;i<st.vH.length;i++){const x=pX(st.vH[i]),y=pY(st.wH[i]);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
-    ctx.strokeStyle='rgba(126,203,161,0.7)';ctx.lineWidth=1.2;ctx.stroke();
-    // Current point
-    ctx.beginPath();ctx.arc(pX(st.vv),pY(st.ww),4,0,Math.PI*2);
-    ctx.fillStyle='rgba(126,203,161,0.9)';ctx.fill();
+    for(let i=0;i<st.vH.length;i++){
+      const x=ppX(st.vH[i]), y=ppY(st.wH[i]);
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle='rgba(126,203,161,0.65)'; ctx.lineWidth=1.2; ctx.stroke();
+
+    // Current state dot
+    ctx.beginPath(); ctx.arc(ppX(st.vv),ppY(st.ww),4,0,Math.PI*2);
+    ctx.fillStyle='rgba(126,203,161,1)'; ctx.fill();
+
     // Labels
     ctx.font='500 9px JetBrains Mono';
-    ctx.fillStyle='rgba(126,184,247,0.42)';ctx.fillText('v(t)',6,14);
-    ctx.fillStyle='rgba(126,203,161,0.42)';ctx.fillText('PHASE PLANE',half+18,14);
-    ctx.fillStyle='rgba(230,185,106,0.4)';ctx.fillText('— v-nullcline',half+18,28);
-    ctx.fillStyle='rgba(167,139,202,0.4)';ctx.fillText('— w-nullcline',half+18,40);
-  }, []); // no params dep — reads from ref
+    ctx.fillStyle='rgba(126,184,247,0.45)';  ctx.fillText('v(t)',         PAD, 13);
+    ctx.fillStyle='rgba(126,203,161,0.45)';  ctx.fillText('PHASE PLANE',  ppL, 13);
+    ctx.fillStyle='rgba(230,185,106,0.55)';  ctx.fillText('— v-nullcline',ppL, 26);
+    ctx.fillStyle='rgba(167,139,202,0.55)';  ctx.fillText('— w-nullcline',ppL, 39);
+    ctx.fillStyle='rgba(126,184,247,0.3)';
+    ctx.fillText(`v=${st.vv.toFixed(3)}  w=${st.ww.toFixed(4)}`, PAD, H-4);
+  }, []);
 
   const startLoop = useCallback(() => {
     const canvas = ref.current; if(!canvas) return;
     canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
-    stateRef.current = {vv:-1.2, ww:-0.6, vH:[], wH:[]};
+    stateRef.current = {vv:0.0, ww:0.0, vH:[], wH:[]};
     running.current = true; setIsRunning(true);
     const loop = () => { if(!running.current) return; drawFrame(); anim.current=requestAnimationFrame(loop); };
     loop();
@@ -340,36 +399,37 @@ function FHNSingleCell() {
 
   useEffect(()=>()=>{running.current=false;cancelAnimationFrame(anim.current);},[]);
 
-  // Slider handler: update state (for display) + paramsRef (for live sim)
-  const setP = (k, v) => {
-    const next = {...paramsRef.current, [k]:v};
+  const setP = (k, val) => {
+    const next = {...paramsRef.current, [k]: val};
     paramsRef.current = next;
     setParams(next);
   };
 
   const sliders = [
-    ['I — External stimulus', 'I', 0, 1, 0.01, 3],
-    ['a — Threshold param',   'a', 0.05, 0.3, 0.01, 3],
-    ['ε — Timescale ratio', 'eps', 0.003, 0.03, 0.001, 4],
+    ['I — Ext. stimulus',  'I',   0,    0.5,  0.005, 3],
+    ['a — Threshold',      'a',   0.05, 0.25, 0.005, 3],
+    ['c₁ — Excitation',   'c1',  0.1,  0.5,  0.01,  2],
+    ['c₂ — Inhibition',   'c2',  0.05, 0.3,  0.005, 3],
+    ['ε — Recovery rate',  'eps', 0.005,0.05, 0.001, 3],
+    ['b — Recovery decay', 'b',   0.005,0.04, 0.001, 3],
   ];
 
   return (
     <div className="sim-wrap">
       <div className="sim-head">
-        <div className="sim-title">// FHN SINGLE CELL — PHASE PLANE</div>
+        <div className="sim-title">// FHN SINGLE CELL — CARDIAC FORMULATION</div>
         <div className="sim-badge">{isRunning ? 'LIVE' : 'IDLE'}</div>
       </div>
-      <div className="sim-canvas-box">
+      <div className="sim-canvas-box" style={{height:'230px'}}>
         <canvas ref={ref} style={{width:'100%',height:'100%'}}/>
         {!isRunning && (
           <div className="sim-overlay">
             <div className="sim-overlay-icon">♡</div>
-            <div className="sim-overlay-txt">Single-cell FHN · phase portrait + nullclines</div>
-            <div className="sim-overlay-code">dv/dt = v − v³/3 − w + I</div>
+            <div className="sim-overlay-txt">Cardiac FHN · phase portrait + nullclines</div>
+            <div className="sim-overlay-code">dv/dt = c₁v(1−v)(v−a) − c₂w + I</div>
           </div>
         )}
       </div>
-      {/* Vertical slider stack — no overlap */}
       <div className="sim-controls">
         {sliders.map(([l,k,mn,mx,st,dp]) => (
           <div className="sim-controls-row" key={k}>
@@ -386,8 +446,9 @@ function FHNSingleCell() {
         </button>
       </div>
       <div className="sim-hint">
-        <span className="sim-hint-kw">// Vary I</span> to see the excitability→oscillator bifurcation.
-        Nullclines: amber (v), lavender (w). Sliders remain interactive while running.
+        <span className="sim-hint-kw">// Cardiac formulation:</span> v ∈ [0,1] normalised potential.
+        Vary <b>I</b> past threshold for AP firing. Nullclines update live.
+        RK4 integration · dt = 0.5 ms.
       </div>
     </div>
   );

@@ -156,7 +156,7 @@
     .sim-overlay-txt{font-size:0.62rem;color:var(--text-muted);}
     .sim-overlay-code{font-size:0.56rem;color:var(--accent-amber);opacity:0.5;}
 
-    /* SLIDERS — vertical stacking, no overlap (clean appearance) */
+    /* SLIDERS */
     .sim-controls{display:flex;flex-direction:column;gap:0.55rem;margin-top:0.5rem;}
     .sim-controls-row{display:flex;align-items:center;gap:0;width:100%;}
     .sim-lbl{font-size:0.62rem;color:var(--text-secondary);white-space:nowrap;width:120px;flex-shrink:0;}
@@ -171,8 +171,9 @@
 
     /* VIDEO PLAYER */
     .video-wrap{background:rgba(0,0,0,0.4);border:1px solid var(--border);padding:1.2rem;}
-    .video-wrap video{width:100%;display:block;background:#000;border:1px solid rgba(126,184,247,0.1);}
+    .video-wrap video{width:100%;display:block;background:#000;border:1px solid rgba(126,184,247,0.15);}
     .video-label{font-size:0.58rem;color:var(--accent-primary);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.9rem;}
+    .video-error-box{padding:1.2rem;background:rgba(224,123,138,0.08);border:1px solid rgba(224,123,138,0.3);color:var(--accent-rose);font-size:0.62rem;line-height:1.6;}
 
     /* PUBLICATIONS */
     #publications{background:var(--bg-void);}
@@ -255,7 +256,7 @@ function HeroCanvas() {
   return React.createElement('canvas',{ref,id:'hero-canvas'});
 }
 
-/* ── PROJECT 1: FHN Single Cell — cardiac formulation ── */
+/* ── PROJECT 1: FHN Single Cell ── */
 function FHNSingleCell() {
   const ref = useRef(null), anim = useRef(null), running = useRef(false);
   const stateRef = useRef({vv:0.25, ww:0.0, vH:[], wH:[]});
@@ -425,16 +426,42 @@ function FHNSingleCell() {
   );
 }
 
-/* ── PROJECT 2: video (Direct src attribute to fix black screen) ── */
+/* ── PROJECT 2: Video Player con Controles y fallback de error ── */
 function WavefrontVideoPlayer() {
+  const videoRef = useRef(null);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
   return (
     <div className="video-wrap">
       <div className="video-label">// 2D WAVEFRONT — SIGNAL PROPAGATION</div>
-      <video 
-        src="assets/wavefront.webm"
-        autoPlay loop muted playsInline preload="auto"
-        style={{width:'100%', display:'block', background:'#000', border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
-      />
+      {hasError ? (
+        <div className="video-error-box">
+          ⚠️ <strong>File Error:</strong> Cannot load video.
+          <br/>Ensure <code>wavefront.webm</code> or <code>wavefront.mp4</code> exists in the <code>assets/</code> folder in GitHub.
+        </div>
+      ) : (
+        <video 
+          ref={videoRef}
+          controls
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="auto"
+          onError={() => setHasError(true)}
+          style={{width:'100%', display:'block', background:'#000', border:'1px solid rgba(126,184,247,0.15)', maxHeight:'320px'}}
+        >
+          <source src="./assets/wavefront.webm" type="video/webm" />
+          <source src="./assets/wavefront.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
         <span className="sim-hint-kw">// FHN 2D numerical simulation.</span> Isotropic and anisotropic meshes — wavefront propagation and spiral wave formation.
       </div>
@@ -442,16 +469,42 @@ function WavefrontVideoPlayer() {
   );
 }
 
-/* ── PROJECT 3: video (Direct src attribute to fix black screen) ── */
+/* ── PROJECT 3: Video Player con Controles y fallback de error ── */
 function ECGVideoPlayer() {
+  const videoRef = useRef(null);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
   return (
     <div className="video-wrap">
       <div className="video-label">// ECG — CARDIAC DIPOLE RECONSTRUCTION</div>
-      <video 
-        src="assets/ecg_dipole.webm"
-        autoPlay loop muted playsInline preload="auto"
-        style={{width:'100%', display:'block', background:'#000', border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
-      />
+      {hasError ? (
+        <div className="video-error-box">
+          ⚠️ <strong>File Error:</strong> Cannot load video.
+          <br/>Ensure <code>ecg_dipole.webm</code> or <code>ecg_dipole.mp4</code> exists in the <code>assets/</code> folder in GitHub.
+        </div>
+      ) : (
+        <video 
+          ref={videoRef}
+          controls
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="auto"
+          onError={() => setHasError(true)}
+          style={{width:'100%', display:'block', background:'#000', border:'1px solid rgba(126,184,247,0.15)', maxHeight:'320px'}}
+        >
+          <source src="./assets/ecg_dipole.webm" type="video/webm" />
+          <source src="./assets/ecg_dipole.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
         <span className="sim-hint-kw">// Synthetic ECG via central cardiac dipole formalism.</span> P–QRS–T morphology reconstructed from the 2D FHN tissue dipole vector (TFG Chapter 4).
       </div>

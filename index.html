@@ -268,7 +268,7 @@ function HeroCanvas() {
 function FHNSingleCell() {
   const ref = useRef(null), anim = useRef(null), running = useRef(false);
   // Initial conditions: resting state near (0, 0)
-  const stateRef = useRef({vv:0.0, ww:0.0, vH:[], wH:[]});
+  const stateRef = useRef({vv:0.25, ww:0.0, vH:[], wH:[]});
   const [isRunning, setIsRunning] = useState(false);
   // c1=c2=1 fixed (scaling constants). Free params:
   // a ∈ (−1,1): threshold position. b > 0: recovery speed of w. ε ≪ 1: timescale separation. I: external current.
@@ -392,7 +392,7 @@ function FHNSingleCell() {
   const startLoop = useCallback(() => {
     const canvas = ref.current; if(!canvas) return;
     canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
-    stateRef.current = {vv:0.0, ww:0.0, vH:[], wH:[]};
+    stateRef.current = {vv:0.25, ww:0.0, vH:[], wH:[]};
     running.current = true; setIsRunning(true);
     const loop = () => { if(!running.current) return; drawFrame(); anim.current=requestAnimationFrame(loop); };
     loop();
@@ -426,7 +426,7 @@ function FHNSingleCell() {
           <div className="sim-overlay">
             <div className="sim-overlay-icon">♡</div>
             <div className="sim-overlay-txt">Cardiac FHN · phase portrait + nullclines</div>
-            <div className="sim-overlay-code">dv/dt = v(1−v)(v−a) − w + I  |  c₁=c₂=1</div>
+            <div className="sim-overlay-code">dv/dt = v(1−v)(v−a) − w + I  |  (v₀,w₀) = (0.25, 0)</div>
           </div>
         )}
       </div>
@@ -536,11 +536,11 @@ const projects = [
     id:'fhn-single',
     tag:'// PROJECT 1 — DYNAMICAL SYSTEMS',
     title:'Single-Cell FHN: Phase Plane & Bifurcation Analysis',
-    sub:'Stability analysis of the FHN reduced model: nullclines, fixed points, Hopf bifurcation, and excitability regimes as a function of system parameters.',
+    sub:'Stability analysis of the cardiac FHN model: nullclines, fixed points, Hopf bifurcation, and excitability regimes as a function of system parameters.',
     pills:['Nullcline Analysis','Hopf Bifurcation','Excitability','Phase Portrait','Stability'],
-    abstract:<>Systematic characterisation of the <strong>FHN two-variable system</strong> as a function of external current <em>I</em> and timescale <em>ε</em>. The v-nullcline (cubic) and w-nullcline (linear) intersect to define <strong>fixed points</strong> whose stability is determined by the Jacobian eigenvalues. As <em>I</em> increases, a <strong>subcritical Hopf bifurcation</strong> transitions the system from excitable to oscillatory regime — directly relevant to ectopic pacemaker behaviour in pathological cardiac tissue.</>,
-    eqs:['f(v) = v − v³/3 − w + I = 0   [v-nullcline]','g(v) = (v + a)/b = w   [w-nullcline]','J = [[1−v², −1], [ε, −εb]]   [Jacobian]'],
-    links:[{label:'↗ GitHub Notebook',href:'#'},{label:'↗ Figures PDF',href:'#'}],
+    abstract:<>Systematic characterisation of the <strong>cardiac FHN two-variable system</strong> (c₁=c₂=1) as a function of external current <em>I</em>, threshold <em>a</em>, and timescale <em>ε</em>. The cubic v-nullcline and linear w-nullcline intersect to define <strong>fixed points</strong> whose stability is determined by the Jacobian eigenvalues. As <em>I</em> increases past the threshold, a <strong>subcritical Hopf bifurcation</strong> transitions the cell from excitable to oscillatory regime — directly relevant to ectopic pacemaker behaviour in pathological cardiac tissue.</>,
+    eqs:['dv/dt = v(1−v)(v−a) − w + I   [c₁=c₂=1]','dw/dt = ε(v − bw)','v-nullcline:  w = v(1−v)(v−a) + I','w-nullcline:  w = v / b'],
+    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFM PDF',href:'assets/pdfs/tfm.pdf'}],
     widget:'single',
   },
   {
@@ -549,9 +549,9 @@ const projects = [
     title:'Action Potential Propagation in Cardiac Tissue via FHN Model',
     sub:"Master's Thesis (TFM) · USAL 2025–2026. Numerical simulation of the spatiotemporal dynamics of cardiac action potential propagation using the FitzHugh-Nagumo model.",
     pills:['FitzHugh-Nagumo','Excitable Media','PDE Numerics','Spiral Waves','Anisotropy','Cardiac Dipole'],
-    abstract:<>Studied the <strong>spatiotemporal propagation dynamics</strong> of cardiac action potentials using the FHN model as a biophysically motivated framework. Characterises single-cell equilibrium points, bifurcation structure, and threshold behaviour analytically and numerically. A <strong>2D diffusive PDE</strong> is solved on an <em>isotropic</em> mesh (conduction velocity) and an <em>anisotropic</em> mesh (spiral wave formation). A <strong>realistic multi-region model</strong> (SA node → AV → His-Purkinje) is assembled by spatially modulating FHN parameters. The central cardiac dipole formalism reconstructs a <strong>synthetic ECG</strong> under physiological and abnormal conditions.</>,
-    eqs:['dv/dt = v − v³/3 − w + I_ext','dw/dt = ε(v + a − b·w)','∂v/∂t = D∇²v + f(v,w)   [2D PDE]','d⃗p/dt ∝ ∬ v(x,y,t) x̂ dA   [Cardiac dipole]'],
-    links:[{label:'↗ GitHub TFM',href:'#'},{label:'↗ TFM PDF',href:'#'},{label:'↗ Poster INNOVA 2025',href:'#'}],
+    abstract:<>Studied the <strong>spatiotemporal propagation dynamics</strong> of cardiac action potentials using the FHN model. A <strong>2D diffusive PDE</strong> is solved on an <em>isotropic</em> mesh (conduction velocity analysis) and an <em>anisotropic</em> mesh (spiral wave formation). A <strong>realistic multi-region model</strong> (SA node → AV → His-Purkinje) is assembled by spatially modulating FHN parameters. The central cardiac dipole formalism reconstructs a <strong>synthetic ECG</strong> under physiological and abnormal conditions, rescaled for clinical comparison.</>,
+    eqs:['dv/dt = v(1−v)(v−a) − w + I   [single cell]','∂v/∂t = D∇²v + v(1−v)(v−a) − w + I   [2D PDE]','dw/dt = ε(v − bw)','⃗p(t) ∝ ∬ v(x,y,t) x̂ dA   [Cardiac dipole]'],
+    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFM PDF',href:'assets/pdfs/tfm.pdf'},{label:'↗ Poster PDF',href:'assets/pdfs/poster_innova2025.pdf'}],
     widget:'video-wave',
   },
   {
@@ -560,10 +560,55 @@ const projects = [
     title:'Synthetic ECG via Cardiac Dipole Formalism',
     sub:'Reconstruction of physiological and pathological ECG morphology from the FHN tissue dipole vector. Spatio-temporal rescaling for clinical comparison.',
     pills:['ECG Synthesis','Cardiac Dipole','Signal Processing','Pathology Modelling','Clinical Validation'],
-    abstract:<>The <strong>central cardiac dipole</strong> vector is computed by integrating the spatial distribution of transmembrane potential <em>v(x,y,t)</em> across the simulated 2D tissue. The resulting waveform reproduces the canonical <strong>P–QRS–T morphology</strong>. Pathological parameter regimes produce recognisable ECG abnormalities: ST elevation, widened QRS, T-wave inversion — enabling biophysical interpretation of clinical ECG features.</>,
+    abstract:<>The <strong>central cardiac dipole</strong> vector is computed by integrating the spatial distribution of transmembrane potential <em>v(x,y,t)</em> across the simulated 2D tissue. The resulting waveform reproduces the canonical <strong>P–QRS–T morphology</strong> under normal parameters. Pathological regimes (altered conduction, blocked regions, spiral waves) produce recognisable ECG abnormalities — ST elevation, widened QRS, T-wave inversion — enabling biophysical interpretation of clinical ECG features. A spatio-temporal rescaling is applied for direct comparison with clinical reference data.</>,
     eqs:['⃗p(t) = Σᵢ v(xᵢ,t) · x̂ᵢ ΔA','ECG(t) ≈ ⃗p(t) · n̂_lead'],
-    links:[{label:'↗ GitHub',href:'#'},{label:'↗ TFM Chapter 4',href:'#'}],
+    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFM Chapter 4',href:'assets/pdfs/tfm.pdf'}],
     widget:'video-ecg',
+  },
+  {
+    id:'mreid',
+    tag:'// PROJECT 4 — DATA ANALYTICS & ETL',
+    title:'MREID Data Analysis: Foreign Direct Investment & Global Efficiency',
+    sub:'Practical case study from the EOI Data Analytics Course. Automated ETL pipeline in n8n, SQL queries, real-time currency conversion, and interactive Power BI dashboard.',
+    pills:['Power BI','MySQL','n8n','ETL','DAX','Foreign Investment'],
+    abstract:<>Comprehensive analysis of <strong>international investment flows and economic performance</strong> (2010–2021) focused on Spain, Portugal, and Italy. The pipeline automates exchange rate ingestion via <strong>n8n ETL</strong>, models data in Power Query, and computes advanced <strong>DAX metrics</strong> — including Revenue per Employee — to evaluate capital profitability and labour productivity without country-size bias. The interactive Power BI dashboard surfaces cross-country trends in FDI efficiency and sectoral performance.</>,
+    eqs:['Revenue per Employee = Total Revenue / Headcount   [DAX]','FDI Efficiency Index = FDI Inflow / GDP per capita','ETL: n8n → MySQL → Power Query → Power BI'],
+    links:[
+      {label:'↗ Case Study PDF', href:'assets/pdfs/caso_practico.pdf'},
+      {label:'↗ Power BI (.pbix)', href:'assets/data/caso_practico.pbix'},
+      {label:'↗ SQL Queries', href:'assets/data/consultas.sql'},
+      {label:'↗ n8n Workflow', href:'assets/data/workflow.json'},
+      {label:'↗ GitHub', href:'https://github.com/yourprofile'},
+    ],
+    widget:'none',
+  },
+  {
+    id:'tinnit',
+    tag:'// PROJECT 5 — BIOMEDICAL SOFTWARE',
+    title:'TinniT_US: Clinical & Educational Tinnitus Assessment System',
+    sub:'Software developed during internship at INCyL (USAL) for the Audiology Degree. Equipment calibration, clinical test execution, and integrated bibliographic review.',
+    pills:['MATLAB','Audio Toolbox','ASIO Drivers','Tinnitus Assessment','Audiology','INCyL'],
+    abstract:<>Clinical software system designed for the execution, calibration, and evaluation of <strong>tinnitus assessment and audiometry tests</strong> using MATLAB and ASIO drivers (RME Fireface, Sennheiser HD 280 PRO headphones). Implements both <strong>subjective measurement</strong> (THI, TFI, VAS questionnaires) and <strong>objective protocols</strong> (pitch/intensity matching, 2AFC). Integrates a comprehensive bibliographic review module covering neurophysiological models of tinnitus and clinical treatment options — compiled in the attached <em>Tinnitus_Review.pdf</em>.</>,
+    eqs:['Hardware: RME Fireface (ASIO) + Sennheiser HD 280 PRO','Protocols: THI · TFI · VAS · Pitch match · 2AFC','Entry point: PROGRAMA_PRINCIPAL_ACUFENOMETRIAS.m'],
+    links:[
+      {label:'↗ Tinnitus Review PDF', href:'assets/pdfs/Tinnitus_Review.pdf'},
+      {label:'↗ GitHub (MATLAB)', href:'https://github.com/yourprofile'},
+    ],
+    widget:'none',
+  },
+  {
+    id:'vocal',
+    tag:'// PROJECT 6 — BIOMEDICAL SIGNALS & ML',
+    title:'Vocal Biometrics & Acoustic Signal Processing',
+    sub:'Non-stationary signal analysis applied to speech. Temporal & spectral analysis (STFT, LPC), dimensionality reduction (PCA), and phoneme clustering via Machine Learning.',
+    pills:['Signal Processing','STFT','LPC','PCA','K-Means','Vocal Biometrics'],
+    abstract:<>Research mini-project on <strong>speech signal analysis</strong> grounded in a non-stationary signal framework. Examines both <strong>time domain</strong> (RMS Energy, Zero-Crossing Rate) and <strong>frequency domain</strong> (FFT, STFT spectrograms, formant extraction via LPC). Applies <strong>Machine Learning</strong> — PCA for dimensionality reduction and K-Means clustering — to investigate the relationship and grouping between logatomes according to consonant classification: plosives, fricatives, nasals, trills, and laterals.</>,
+    eqs:['Time: RMS Energy, Zero-Crossing Rate (ZCR)','Spectral: FFT · STFT spectrogram · LPC formants','Dimensionality: PCA  →  K-Means phoneme clustering'],
+    links:[
+      {label:'↗ Technical Report', href:'assets/pdfs/vocal_biometrics.pdf'},
+      {label:'↗ GitHub', href:'https://github.com/yourprofile'},
+    ],
+    widget:'none',
   },
 ];
 
@@ -586,29 +631,53 @@ function ResearchCard({p, expanded, onToggle}) {
       {expanded && (
         <div className="card-body">
           <div className="card-divider"/>
-          <div className="exp-grid">
-            <div>
-              <div className="exp-block">
-                <div className="exp-label">Abstract</div>
-                <div className="exp-text">{p.abstract}</div>
+          {/* Projects with widget use 2-col layout; text-only projects use full width */}
+          {p.widget === 'none' ? (
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem'}}>
+              <div>
+                <div className="exp-block">
+                  <div className="exp-label">Abstract</div>
+                  <div className="exp-text">{p.abstract}</div>
+                </div>
               </div>
-              <div className="exp-block" style={{marginTop:'1rem'}}>
-                <div className="exp-label">Key Equations</div>
-                {p.eqs.map((eq,i)=><div key={i} className="eq-box">{eq}</div>)}
-              </div>
-              <div className="exp-block" style={{marginTop:'1rem'}}>
-                <div className="exp-label">Resources</div>
-                <div className="resource-links">
-                  {p.links.map((l,i)=><a key={i} href={l.href} className="r-link" target="_blank">{l.label}</a>)}
+              <div>
+                <div className="exp-block">
+                  <div className="exp-label">Technical Specs</div>
+                  {p.eqs.map((eq,i)=><div key={i} className="eq-box">{eq}</div>)}
+                </div>
+                <div className="exp-block" style={{marginTop:'1rem'}}>
+                  <div className="exp-label">Resources</div>
+                  <div className="resource-links">
+                    {p.links.map((l,i)=><a key={i} href={l.href} className="r-link" target="_blank" rel="noopener noreferrer">{l.label}</a>)}
+                  </div>
                 </div>
               </div>
             </div>
-            <div>
-              {p.widget==='single'    && <FHNSingleCell/>}
-              {p.widget==='video-wave'&& <WavefrontVideoPlayer/>}
-              {p.widget==='video-ecg' && <ECGVideoPlayer/>}
+          ) : (
+            <div className="exp-grid">
+              <div>
+                <div className="exp-block">
+                  <div className="exp-label">Abstract</div>
+                  <div className="exp-text">{p.abstract}</div>
+                </div>
+                <div className="exp-block" style={{marginTop:'1rem'}}>
+                  <div className="exp-label">Key Equations</div>
+                  {p.eqs.map((eq,i)=><div key={i} className="eq-box">{eq}</div>)}
+                </div>
+                <div className="exp-block" style={{marginTop:'1rem'}}>
+                  <div className="exp-label">Resources</div>
+                  <div className="resource-links">
+                    {p.links.map((l,i)=><a key={i} href={l.href} className="r-link" target="_blank" rel="noopener noreferrer">{l.label}</a>)}
+                  </div>
+                </div>
+              </div>
+              <div>
+                {p.widget==='single'    && <FHNSingleCell/>}
+                {p.widget==='video-wave'&& <WavefrontVideoPlayer/>}
+                {p.widget==='video-ecg' && <ECGVideoPlayer/>}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
@@ -759,6 +828,8 @@ function App() {
                 <a href="https://linkedin.com/in/yourprofile" className="contact-link" target="_blank"><span className="contact-icon">in</span> linkedin.com/in/yourprofile</a>
                 <a href="https://github.com/yourprofile" className="contact-link" target="_blank"><span className="contact-icon">⌥</span> github.com/yourprofile</a>
                 <a href="#" className="contact-link"><span className="contact-icon">◉</span> ORCID / ResearchGate</a>
+                <a href="assets/pdfs/cv.pdf" className="contact-link" target="_blank"><span className="contact-icon">↗</span> Curriculum Vitae (PDF)</a>
+                <a href="assets/pdfs/tfm.pdf" className="contact-link" target="_blank"><span className="contact-icon">↗</span> Master's Thesis — TFM (PDF)</a>
               </div>
             </div>
             <div className="stats-grid" style={{marginTop:'1.25rem'}}>
@@ -813,11 +884,9 @@ function App() {
             <div className="pub-type">MSc Thesis · 2026</div>
             <div className="pub-title">Study of the Dynamics of Action Potential Propagation in Cardiac Tissue Using the FitzHugh-Nagumo Model</div>
             <div className="pub-venue">University of Salamanca · B.Sc. in Physics · 2025–2026</div>
-            <div className="pub-abstract">FHN stability analysis, 2D propagation on isotropic and anisotropic meshes, spiral waves, realistic multi-region cardiac model, and ECG synthesis via central cardiac dipole under physiological and pathological conditions.</div>
             <div className="pub-links">
-              <a href="#" className="pub-link">↗ PDF Thesis</a>
-              <a href="#" className="pub-link">↗ GitHub</a>
-              <a href="#" className="pub-link">↗ Abstract</a>
+              <a href="assets/pdfs/tfm.pdf" className="pub-link" target="_blank" rel="noopener noreferrer">↗ PDF Thesis</a>
+              <a href="https://github.com/yourprofile" className="pub-link" target="_blank" rel="noopener noreferrer">↗ GitHub</a>
             </div>
           </div>
           <div className="pub-card">
@@ -826,16 +895,17 @@ function App() {
             <div className="pub-venue">Jornadas de Investigación de Castilla y León · León, April 16–17, 2026</div>
             <div className="pub-abstract">Numerical 2D FHN simulation with ECG synthesis via cardiac dipole. Analysis of pathological conditions and comparison with clinical reference data.</div>
             <div className="pub-links">
-              <a href="#" className="pub-link">↗ Poster PDF</a>
-              <a href="#" className="pub-link">↗ Abstract</a>
+              <a href="assets/pdfs/poster_leon2026.pdf" className="pub-link" target="_blank" rel="noopener noreferrer">↗ Poster PDF</a>
             </div>
           </div>
           <div className="pub-card">
             <div className="pub-type">Conference Poster · 2025</div>
             <div className="pub-title">Spatiotemporal Simulation of the Action Potential in Cardiac Cells</div>
             <div className="pub-venue">IV International Conference of Young Researchers INNOVA · Centro Internacional del Español, Salamanca, Spain</div>
-            <div className="pub-abstract">Single-cell FHN model: phase plane, nullclines, fixed points, and excitability transitions as a function of system parameters.</div>
-            <div className="pub-links"><a href="#" className="pub-link">↗ Poster PDF</a></div>
+            <div className="pub-abstract">Single-cell FHN model: phase plane analysis, nullclines, equilibrium points, and excitability transitions as a function of system parameters. Emphasis on the all-or-nothing behaviour of the cardiac action potential and the role of the threshold parameter <em>a</em> in defining the separatrix geometry between firing and non-firing trajectories.</div>
+            <div className="pub-links">
+              <a href="assets/pdfs/poster_innova2025.pdf" className="pub-link" target="_blank" rel="noopener noreferrer">↗ Poster PDF</a>
+            </div>
           </div>
           <div className="pub-card" style={{borderStyle:'dashed',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'140px'}}>
             <div style={{fontSize:'1.4rem',color:'var(--text-muted)',marginBottom:'0.4rem'}}>+</div>

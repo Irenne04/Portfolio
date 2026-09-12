@@ -84,12 +84,12 @@
     .stat-num{font-family:var(--font-display);font-size:1.7rem;font-weight:800;color:var(--accent-primary);line-height:1;}
     .stat-label{font-size:0.54rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.2rem;}
 
-    /* SKILLS — font-size matches about-bio (0.84rem) */
+    /* SKILLS — slightly smaller than about-bio */
     .skills-panel{padding:1.5rem;}
     .skill-group{margin-bottom:1.15rem;}
-    .skill-group-title{font-size:0.84rem;color:var(--accent-amber);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.55rem;}
+    .skill-group-title{font-size:0.72rem;color:var(--accent-amber);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.55rem;}
     .skill-tags{display:flex;flex-wrap:wrap;gap:0.35rem;}
-    .skill-tag{font-size:0.84rem;padding:0.24rem 0.6rem;background:rgba(126,184,247,0.05);border:1px solid var(--border);color:var(--text-secondary);transition:all 0.2s;cursor:default;}
+    .skill-tag{font-size:0.72rem;padding:0.24rem 0.6rem;background:rgba(126,184,247,0.05);border:1px solid var(--border);color:var(--text-secondary);transition:all 0.2s;cursor:default;}
     .skill-tag:hover{background:rgba(126,184,247,0.1);border-color:var(--accent-primary);color:var(--accent-primary);}
     .contact-links{display:flex;flex-direction:column;margin-top:1.5rem;}
     .contact-link{font-size:0.84rem;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:0.65rem;padding:0.52rem 0;border-bottom:1px solid var(--border);transition:color 0.2s;}
@@ -480,8 +480,8 @@ function WavefrontVideoPlayer() {
                 border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
         onEnded={e => { e.target.currentTime = 0; e.target.play().catch(() => {}); }}
       >
-        <source src="assets/wavefront.mp4"  type="video/mp4" />
         <source src="assets/wavefront.webm" type="video/webm" />
+        <source src="assets/wavefront.mp4"  type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
@@ -518,13 +518,13 @@ function ECGVideoPlayer() {
                 border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
         onEnded={e => { e.target.currentTime = 0; e.target.play().catch(() => {}); }}
       >
-        <source src="assets/ecg_dipole.mp4"  type="video/mp4" />
         <source src="assets/ecg_dipole.webm" type="video/webm" />
+        <source src="assets/ecg_dipole.mp4"  type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
         <span className="sim-hint-kw">// Synthetic ECG via central cardiac dipole formalism.</span> P–QRS–T
-        morphology reconstructed from the 2D FHN tissue dipole vector (TFM Chapter 4).
+        morphology reconstructed from the 2D FHN tissue dipole vector (TFG Chapter 4).
       </div>
     </div>
   );
@@ -540,18 +540,17 @@ const projects = [
     pills:['Nullcline Analysis','Hopf Bifurcation','Excitability','Phase Portrait','Stability'],
     abstract:<>Systematic characterisation of the <strong>cardiac FHN two-variable system</strong> (c₁=c₂=1) as a function of external current <em>I</em>, threshold <em>a</em>, and timescale <em>ε</em>. The cubic v-nullcline and linear w-nullcline intersect to define <strong>fixed points</strong> whose stability is determined by the Jacobian eigenvalues. As <em>I</em> increases past the threshold, a <strong>subcritical Hopf bifurcation</strong> transitions the cell from excitable to oscillatory regime — directly relevant to ectopic pacemaker behaviour in pathological cardiac tissue.</>,
     eqs:['dv/dt = v(1−v)(v−a) − w + I   [c₁=c₂=1]','dw/dt = ε(v − bw)','v-nullcline:  w = v(1−v)(v−a) + I','w-nullcline:  w = v / b'],
-    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFM PDF',href:'assets/pdfs/tfm.pdf'}],
-    widget:'single',
+    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'}],
   },
   {
-    id:'fhn-tfm',
+    id:'fhn-tfg',
     tag:'// PROJECT 2 — BIOPHYSICS & COMPLEX SYSTEMS',
     title:'Action Potential Propagation in Cardiac Tissue via FHN Model',
-    sub:"Master's Thesis (TFM) · USAL 2025–2026. Numerical simulation of the spatiotemporal dynamics of cardiac action potential propagation using the FitzHugh-Nagumo model.",
+    sub:"Final Degree Project (TFG) · USAL 2025–2026. Numerical simulation of the spatiotemporal dynamics of cardiac action potential propagation using the FitzHugh-Nagumo model.",
     pills:['FitzHugh-Nagumo','Excitable Media','PDE Numerics','Spiral Waves','Anisotropy','Cardiac Dipole'],
     abstract:<>Studied the <strong>spatiotemporal propagation dynamics</strong> of cardiac action potentials using the FHN model. A <strong>2D diffusive PDE</strong> is solved on an <em>isotropic</em> mesh (conduction velocity analysis) and an <em>anisotropic</em> mesh (spiral wave formation). A <strong>realistic multi-region model</strong> (SA node → AV → His-Purkinje) is assembled by spatially modulating FHN parameters. The central cardiac dipole formalism reconstructs a <strong>synthetic ECG</strong> under physiological and abnormal conditions, rescaled for clinical comparison.</>,
     eqs:['dv/dt = v(1−v)(v−a) − w + I   [single cell]','∂v/∂t = D∇²v + v(1−v)(v−a) − w + I   [2D PDE]','dw/dt = ε(v − bw)','⃗p(t) ∝ ∬ v(x,y,t) x̂ dA   [Cardiac dipole]'],
-    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFM PDF',href:'assets/pdfs/tfm.pdf'},{label:'↗ Poster PDF',href:'assets/pdfs/poster_innova2025.pdf'}],
+    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'},{label:'↗ Poster PDF',href:'assets/pdfs/poster_innova2025.pdf'}],
     widget:'video-wave',
   },
   {
@@ -562,7 +561,7 @@ const projects = [
     pills:['ECG Synthesis','Cardiac Dipole','Signal Processing','Pathology Modelling','Clinical Validation'],
     abstract:<>The <strong>central cardiac dipole</strong> vector is computed by integrating the spatial distribution of transmembrane potential <em>v(x,y,t)</em> across the simulated 2D tissue. The resulting waveform reproduces the canonical <strong>P–QRS–T morphology</strong> under normal parameters. Pathological regimes (altered conduction, blocked regions, spiral waves) produce recognisable ECG abnormalities — ST elevation, widened QRS, T-wave inversion — enabling biophysical interpretation of clinical ECG features. A spatio-temporal rescaling is applied for direct comparison with clinical reference data.</>,
     eqs:['⃗p(t) = Σᵢ v(xᵢ,t) · x̂ᵢ ΔA','ECG(t) ≈ ⃗p(t) · n̂_lead'],
-    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFM Chapter 4',href:'assets/pdfs/tfm.pdf'}],
+    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFG Chapter 4',href:'assets/pdfs/tfg.pdf'}],
     widget:'video-ecg',
   },
   {
@@ -574,10 +573,6 @@ const projects = [
     abstract:<>Comprehensive analysis of <strong>international investment flows and economic performance</strong> (2010–2021) focused on Spain, Portugal, and Italy. The pipeline automates exchange rate ingestion via <strong>n8n ETL</strong>, models data in Power Query, and computes advanced <strong>DAX metrics</strong> — including Revenue per Employee — to evaluate capital profitability and labour productivity without country-size bias. The interactive Power BI dashboard surfaces cross-country trends in FDI efficiency and sectoral performance.</>,
     eqs:['Revenue per Employee = Total Revenue / Headcount   [DAX]','FDI Efficiency Index = FDI Inflow / GDP per capita','ETL: n8n → MySQL → Power Query → Power BI'],
     links:[
-      {label:'↗ Case Study PDF', href:'assets/pdfs/caso_practico.pdf'},
-      {label:'↗ Power BI (.pbix)', href:'assets/data/caso_practico.pbix'},
-      {label:'↗ SQL Queries', href:'assets/data/consultas.sql'},
-      {label:'↗ n8n Workflow', href:'assets/data/workflow.json'},
       {label:'↗ GitHub', href:'https://github.com/yourprofile'},
     ],
     widget:'none',
@@ -605,7 +600,6 @@ const projects = [
     abstract:<>Research mini-project on <strong>speech signal analysis</strong> grounded in a non-stationary signal framework. Examines both <strong>time domain</strong> (RMS Energy, Zero-Crossing Rate) and <strong>frequency domain</strong> (FFT, STFT spectrograms, formant extraction via LPC). Applies <strong>Machine Learning</strong> — PCA for dimensionality reduction and K-Means clustering — to investigate the relationship and grouping between logatomes according to consonant classification: plosives, fricatives, nasals, trills, and laterals.</>,
     eqs:['Time: RMS Energy, Zero-Crossing Rate (ZCR)','Spectral: FFT · STFT spectrogram · LPC formants','Dimensionality: PCA  →  K-Means phoneme clustering'],
     links:[
-      {label:'↗ Technical Report', href:'assets/pdfs/vocal_biometrics.pdf'},
       {label:'↗ GitHub', href:'https://github.com/yourprofile'},
     ],
     widget:'none',
@@ -742,7 +736,7 @@ const confItems = [
     date:'April 16–17, 2026',
     role:'Poster Communication',
     place:'Jornadas de Investigación de Castilla y León · León, Spain',
-    desc:'"Simulation of electrocardiographic signals using the FitzHugh-Nagumo model in two-dimensional tissues." TFM results: 2D propagation, spiral waves, ECG synthesis via cardiac dipole.',
+    desc:'"Simulation of electrocardiographic signals using the FitzHugh-Nagumo model in two-dimensional tissues." TFG results: 2D propagation, spiral waves, ECG synthesis via cardiac dipole.',
     badge:'Poster', badgeClass:'',
   },
   {
@@ -829,11 +823,11 @@ function App() {
                 <a href="https://github.com/yourprofile" className="contact-link" target="_blank"><span className="contact-icon">⌥</span> github.com/yourprofile</a>
                 <a href="#" className="contact-link"><span className="contact-icon">◉</span> ORCID / ResearchGate</a>
                 <a href="assets/pdfs/cv.pdf" className="contact-link" target="_blank"><span className="contact-icon">↗</span> Curriculum Vitae (PDF)</a>
-                <a href="assets/pdfs/tfm.pdf" className="contact-link" target="_blank"><span className="contact-icon">↗</span> Master's Thesis — TFM (PDF)</a>
+                <a href="assets/pdfs/tfg.pdf" className="contact-link" target="_blank"><span className="contact-icon">↗</span> Final Degree Project — TFG (PDF)</a>
               </div>
             </div>
             <div className="stats-grid" style={{marginTop:'1.25rem'}}>
-              {[['1','MSc Thesis'],['2','Conferences'],['3+','FHN Models'],['1','Internship']].map(([n,l])=>(
+              {[['1','TFG'],['2','Conferences'],['3+','FHN Models'],['1','Internship']].map(([n,l])=>(
                 <div key={l} className="stat-cell"><div className="stat-num">{n}</div><div className="stat-label">{l}</div></div>
               ))}
             </div>
@@ -881,11 +875,11 @@ function App() {
         </div>
         <div className="pub-grid">
           <div className="pub-card">
-            <div className="pub-type">MSc Thesis · 2026</div>
+            <div className="pub-type">TFG · 2026</div>
             <div className="pub-title">Study of the Dynamics of Action Potential Propagation in Cardiac Tissue Using the FitzHugh-Nagumo Model</div>
             <div className="pub-venue">University of Salamanca · B.Sc. in Physics · 2025–2026</div>
             <div className="pub-links">
-              <a href="assets/pdfs/tfm.pdf" className="pub-link" target="_blank" rel="noopener noreferrer">↗ PDF Thesis</a>
+              <a href="assets/pdfs/tfg.pdf" className="pub-link" target="_blank" rel="noopener noreferrer">↗ PDF Thesis</a>
               <a href="https://github.com/yourprofile" className="pub-link" target="_blank" rel="noopener noreferrer">↗ GitHub</a>
             </div>
           </div>

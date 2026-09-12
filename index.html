@@ -84,12 +84,12 @@
     .stat-num{font-family:var(--font-display);font-size:1.7rem;font-weight:800;color:var(--accent-primary);line-height:1;}
     .stat-label{font-size:0.54rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.2rem;}
 
-    /* SKILLS — slightly smaller than about-bio */
+    /* SKILLS — slightly smaller font size */
     .skills-panel{padding:1.5rem;}
-    .skill-group{margin-bottom:1.15rem;}
-    .skill-group-title{font-size:0.62rem;color:var(--accent-amber);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.55rem;}
-    .skill-tags{display:flex;flex-wrap:wrap;gap:0.35rem;}
-    .skill-tag{font-size:0.62rem;padding:0.22rem 0.55rem;background:rgba(126,184,247,0.05);border:1px solid var(--border);color:var(--text-secondary);transition:all 0.2s;cursor:default;}
+    .skill-group{margin-bottom:1rem;}
+    .skill-group-title{font-size:0.56rem;color:var(--accent-amber);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.45rem;}
+    .skill-tags{display:flex;flex-wrap:wrap;gap:0.3rem;}
+    .skill-tag{font-size:0.55rem;padding:0.2rem 0.45rem;background:rgba(126,184,247,0.05);border:1px solid var(--border);color:var(--text-secondary);transition:all 0.2s;cursor:default;}
     .skill-tag:hover{background:rgba(126,184,247,0.1);border-color:var(--accent-primary);color:var(--accent-primary);}
     .contact-links{display:flex;flex-direction:column;margin-top:1.5rem;}
     .contact-link{font-size:0.84rem;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:0.65rem;padding:0.52rem 0;border-bottom:1px solid var(--border);transition:color 0.2s;}
@@ -156,13 +156,13 @@
     .sim-overlay-txt{font-size:0.62rem;color:var(--text-muted);}
     .sim-overlay-code{font-size:0.56rem;color:var(--accent-amber);opacity:0.5;}
 
-    /* SLIDERS — vertical stacking, no overlap */
+    /* SLIDERS — vertical stacking, no overlap (clean appearance) */
     .sim-controls{display:flex;flex-direction:column;gap:0.55rem;margin-top:0.5rem;}
     .sim-controls-row{display:flex;align-items:center;gap:0;width:100%;}
     .sim-lbl{font-size:0.62rem;color:var(--text-secondary);white-space:nowrap;width:120px;flex-shrink:0;}
-    .sim-slider{flex:1;appearance:none;-webkit-appearance:none;height:2px;background:var(--border);outline:none;margin:0 0.6rem;cursor:pointer;border:none;}
+    .sim-slider{flex:1;appearance:none;-webkit-appearance:none;-moz-appearance:none;height:2px;background:var(--border);outline:none;margin:0 0.6rem;cursor:pointer;border:none;}
     .sim-slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:11px;height:11px;background:var(--accent-primary);cursor:pointer;border-radius:0;border:none;}
-    .sim-slider::-moz-range-thumb{width:11px;height:11px;background:var(--accent-primary);cursor:pointer;border-radius:0;border:none;}
+    .sim-slider::-moz-range-thumb{appearance:none;-moz-appearance:none;width:11px;height:11px;background:var(--accent-primary);cursor:pointer;border-radius:0;border:none;}
     .sim-val{font-size:0.62rem;color:var(--accent-primary);width:44px;text-align:right;flex-shrink:0;}
     .sim-btn{background:rgba(126,184,247,0.07);border:1px solid var(--border-bright);color:var(--accent-primary);padding:0.38rem 0.9rem;font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;align-self:flex-start;margin-top:0.3rem;}
     .sim-btn:hover{background:rgba(126,184,247,0.14);box-shadow:var(--glow-primary);}
@@ -173,12 +173,6 @@
     .video-wrap{background:rgba(0,0,0,0.4);border:1px solid var(--border);padding:1.2rem;}
     .video-wrap video{width:100%;display:block;background:#000;border:1px solid rgba(126,184,247,0.1);}
     .video-label{font-size:0.58rem;color:var(--accent-primary);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.9rem;}
-    .video-upload-label{display:block;border:1px dashed var(--border-bright);padding:0.8rem;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:0.8rem;background:rgba(126,184,247,0.02);}
-    .video-upload-label:hover{background:rgba(126,184,247,0.06);border-color:var(--accent-primary);}
-    .video-upload-label input{display:none;}
-    .video-upload-icon{font-size:1.1rem;color:var(--accent-primary);opacity:0.4;margin-bottom:0.25rem;}
-    .video-upload-txt{font-size:0.6rem;color:var(--text-muted);}
-    .video-upload-ok{font-size:0.62rem;color:var(--accent-amber);margin-top:0.25rem;}
 
     /* PUBLICATIONS */
     #publications{background:var(--bg-void);}
@@ -261,18 +255,11 @@ function HeroCanvas() {
   return React.createElement('canvas',{ref,id:'hero-canvas'});
 }
 
-/* ── PROJECT 1: FHN Single Cell — cardiac formulation
-   dv/dt = c1·v·(1−v)·(v−a) − c2·w + I
-   dw/dt = ε·(v − b·w)
-   v ∈ [0,1] normalised membrane potential
-   paramsRef pattern: sliders stay live while simulation runs ── */
+/* ── PROJECT 1: FHN Single Cell — cardiac formulation ── */
 function FHNSingleCell() {
   const ref = useRef(null), anim = useRef(null), running = useRef(false);
-  // Initial conditions: resting state near (0, 0)
   const stateRef = useRef({vv:0.25, ww:0.0, vH:[], wH:[]});
   const [isRunning, setIsRunning] = useState(false);
-  // c1=c2=1 fixed (scaling constants). Free params:
-  // a ∈ (−1,1): threshold position. b > 0: recovery speed of w. ε ≪ 1: timescale separation. I: external current.
   const C1 = 1, C2 = 1;
   const [params, setParams] = useState({a:0.13, b:0.5, eps:0.01, I:0.0});
   const paramsRef = useRef(params);
@@ -291,7 +278,6 @@ function FHNSingleCell() {
     const {a, b, eps, I} = paramsRef.current;
     const st = stateRef.current;
 
-    // RK4 — c1=c2=1 fixed
     const dt = 0.5;
     for(let s = 0; s < 4; s++){
       const fv = (v,w) => C1*v*(1-v)*(v-a) - C2*w + I;
@@ -307,15 +293,12 @@ function FHNSingleCell() {
     }
 
     ctx.fillStyle='#07090f'; ctx.fillRect(0,0,W,H);
-    // Grid
     ctx.strokeStyle='rgba(126,184,247,0.04)'; ctx.lineWidth=1;
     for(let g=0;g<5;g++){const y=(H/4)*g;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
 
     const half = W/2;
     const PAD = 14;
 
-    // ── LEFT: v(t) time trace ──
-    // v ∈ [−0.1, 1.1] for display
     const vMin=-0.1, vMax=1.1;
     const mapVy = v => H - PAD - ((v - vMin)/(vMax - vMin))*(H - 2*PAD);
     ctx.beginPath();
@@ -326,38 +309,32 @@ function FHNSingleCell() {
     }
     ctx.strokeStyle='rgba(126,184,247,0.88)'; ctx.lineWidth=1.5; ctx.stroke();
 
-    // Baseline v=0
     ctx.beginPath(); ctx.setLineDash([3,4]);
     ctx.moveTo(PAD, mapVy(0)); ctx.lineTo(half-PAD, mapVy(0));
     ctx.strokeStyle='rgba(126,184,247,0.15)'; ctx.lineWidth=1; ctx.stroke();
     ctx.setLineDash([]);
 
-    // ── RIGHT: phase plane (v horizontal, w vertical) ──
-    // v ∈ [−0.15, 1.15]; w window wide enough for w-nullcline w=v/b (b~0.5 → w_max~1/0.5=2 → clip at 0.4)
     const ppL = half + PAD, ppR = W - PAD, ppT = PAD, ppB = H - PAD;
     const ppW = ppR - ppL, ppH2 = ppB - ppT;
     const wMin = -0.05, wMax = 0.4;
     const ppX = v => ppL + ((v - vMin)/(vMax - vMin))*ppW;
     const ppY = w => ppB - ((w - wMin)/(wMax - wMin))*ppH2;
 
-    // Axes
     ctx.strokeStyle='rgba(126,184,247,0.1)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(ppX(0),ppT); ctx.lineTo(ppX(0),ppB); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(ppL,ppY(0)); ctx.lineTo(ppR,ppY(0)); ctx.stroke();
 
-    // v-nullcline: w = [v(1−v)(v−a) + I] / 1   (c1=c2=1)  →  w = v(1−v)(v−a) + I
     ctx.strokeStyle='rgba(230,185,106,0.65)'; ctx.lineWidth=1.4; ctx.setLineDash([4,4]);
     ctx.beginPath();
     let firstNC = true;
     for(let vi=vMin; vi<=vMax; vi+=0.005){
-      const wn = C1*vi*(1-vi)*(vi-a) + I;   // c2=1 → divide by 1
+      const wn = C1*vi*(1-vi)*(vi-a) + I;
       if(wn < wMin-0.05 || wn > wMax+0.05){ firstNC=true; continue; }
       firstNC ? ctx.moveTo(ppX(vi),ppY(wn)) : ctx.lineTo(ppX(vi),ppY(wn));
       firstNC=false;
     }
     ctx.stroke();
 
-    // w-nullcline: w = v / b   (lavender)
     ctx.strokeStyle='rgba(167,139,202,0.65)'; ctx.lineWidth=1.4;
     ctx.beginPath(); firstNC=true;
     for(let vi=vMin; vi<=vMax; vi+=0.005){
@@ -368,7 +345,6 @@ function FHNSingleCell() {
     }
     ctx.stroke(); ctx.setLineDash([]);
 
-    // Trajectory (sage green)
     ctx.beginPath();
     for(let i=0;i<st.vH.length;i++){
       const x=ppX(st.vH[i]), y=ppY(st.wH[i]);
@@ -376,18 +352,14 @@ function FHNSingleCell() {
     }
     ctx.strokeStyle='rgba(126,203,161,0.65)'; ctx.lineWidth=1.2; ctx.stroke();
 
-    // Current state dot
     ctx.beginPath(); ctx.arc(ppX(st.vv),ppY(st.ww),4,0,Math.PI*2);
     ctx.fillStyle='rgba(126,203,161,1)'; ctx.fill();
 
-    // Labels
     ctx.font='500 9px JetBrains Mono';
     ctx.fillStyle='rgba(126,184,247,0.45)';  ctx.fillText('v(t)',         PAD, 13);
     ctx.fillStyle='rgba(126,203,161,0.45)';  ctx.fillText('PHASE PLANE',  ppL, 13);
     ctx.fillStyle='rgba(230,185,106,0.55)';  ctx.fillText('— v-nullcline',ppL, 26);
     ctx.fillStyle='rgba(167,139,202,0.55)';  ctx.fillText('— w-nullcline',ppL, 39);
-    ctx.fillStyle='rgba(126,184,247,0.3)';
-    ctx.fillText(`v=${st.vv.toFixed(3)}  w=${st.ww.toFixed(4)}`, PAD, H-4);
   }, []);
 
   const startLoop = useCallback(() => {
@@ -407,12 +379,11 @@ function FHNSingleCell() {
     setParams(next);
   };
 
-  // c1=c2=1 fixed — only expose the 4 free parameters
   const sliders = [
-    ['I — External current', 'I',   -0.5,  0.5,  0.01,  2],  // I: drives excitation
-    ['a — Threshold  (−1,1)','a',   -0.9,  0.9,  0.01,  2],  // a ∈ (−1,1)
-    ['b — Recovery speed',   'b',    0.1,  2.0,  0.05,  2],  // b > 0
-    ['ε — Timescale  (≪1)',  'eps',  0.001,0.1,  0.001, 3],  // ε ≪ 1
+    ['I — External current', 'I',   -0.5,  0.5,  0.01,  2],
+    ['a — Threshold  (−1,1)','a',   -0.9,  0.9,  0.01,  2],
+    ['b — Recovery speed',   'b',    0.1,  2.0,  0.05,  2],
+    ['ε — Timescale  (≪1)',  'eps',  0.001,0.1,  0.001, 3],
   ];
 
   return (
@@ -449,31 +420,21 @@ function FHNSingleCell() {
       <div className="sim-hint">
         <span className="sim-hint-kw">// c₁ = c₂ = 1 fixed.</span> v ∈ [0,1] normalised potential.
         Vary <b>I</b> past threshold <b>a</b> for AP firing. Keep <b>ε ≪ 1</b> for timescale separation.
-        Nullclines update live · RK4 · dt = 0.5 ms.
       </div>
     </div>
   );
 }
 
-/* ── PROJECT 2: video — wavefront propagation ── */
+/* ── PROJECT 2: video (Direct src attribute to fix black screen) ── */
 function WavefrontVideoPlayer() {
-  const ref = useRef(null);
-  useEffect(() => {
-    const v = ref.current; if (!v) return;
-    const resume = () => { if (v.paused) v.play().catch(()=>{}); };
-    v.addEventListener('loadeddata', resume, {once:true});
-    return () => v.removeEventListener('loadeddata', resume);
-  }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// 2D WAVEFRONT — SIGNAL PROPAGATION</div>
-      <video ref={ref} autoPlay loop muted playsInline preload="auto"
-        onEnded={e=>{e.target.currentTime=0;e.target.play().catch(()=>{});}}
-        style={{width:'100%',display:'block',background:'#000',
-                border:'1px solid rgba(126,184,247,0.1)',maxHeight:'320px'}}>
-        <source src="assets/wavefront.webm" type="video/webm"/>
-        <source src="assets/wavefront.mp4"  type="video/mp4"/>
-      </video>
+      <video 
+        src="assets/wavefront.webm"
+        autoPlay loop muted playsInline preload="auto"
+        style={{width:'100%', display:'block', background:'#000', border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
+      />
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
         <span className="sim-hint-kw">// FHN 2D numerical simulation.</span> Isotropic and anisotropic meshes — wavefront propagation and spiral wave formation.
       </div>
@@ -481,25 +442,16 @@ function WavefrontVideoPlayer() {
   );
 }
 
-/* ── PROJECT 3: video — ECG cardiac dipole reconstruction ── */
+/* ── PROJECT 3: video (Direct src attribute to fix black screen) ── */
 function ECGVideoPlayer() {
-  const ref = useRef(null);
-  useEffect(() => {
-    const v = ref.current; if (!v) return;
-    const resume = () => { if (v.paused) v.play().catch(()=>{}); };
-    v.addEventListener('loadeddata', resume, {once:true});
-    return () => v.removeEventListener('loadeddata', resume);
-  }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// ECG — CARDIAC DIPOLE RECONSTRUCTION</div>
-      <video ref={ref} autoPlay loop muted playsInline preload="auto"
-        onEnded={e=>{e.target.currentTime=0;e.target.play().catch(()=>{});}}
-        style={{width:'100%',display:'block',background:'#000',
-                border:'1px solid rgba(126,184,247,0.1)',maxHeight:'320px'}}>
-        <source src="assets/ecg_dipole.webm" type="video/webm"/>
-        <source src="assets/ecg_dipole.mp4"  type="video/mp4"/>
-      </video>
+      <video 
+        src="assets/ecg_dipole.webm"
+        autoPlay loop muted playsInline preload="auto"
+        style={{width:'100%', display:'block', background:'#000', border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
+      />
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
         <span className="sim-hint-kw">// Synthetic ECG via central cardiac dipole formalism.</span> P–QRS–T morphology reconstructed from the 2D FHN tissue dipole vector (TFG Chapter 4).
       </div>
@@ -550,9 +502,7 @@ const projects = [
     pills:['Power BI','MySQL','n8n','ETL','DAX','Foreign Investment'],
     abstract:<>Comprehensive analysis of <strong>international investment flows and economic performance</strong> (2010–2021) focused on Spain, Portugal, and Italy. The pipeline automates exchange rate ingestion via <strong>n8n ETL</strong>, models data in Power Query, and computes advanced <strong>DAX metrics</strong> — including Revenue per Employee — to evaluate capital profitability and labour productivity without country-size bias. The interactive Power BI dashboard surfaces cross-country trends in FDI efficiency and sectoral performance.</>,
     eqs:['Revenue per Employee = Total Revenue / Headcount   [DAX]','FDI Efficiency Index = FDI Inflow / GDP per capita','ETL: n8n → MySQL → Power Query → Power BI'],
-    links:[
-      {label:'↗ GitHub', href:'https://github.com/yourprofile'},
-    ],
+    links:[{label:'↗ GitHub', href:'https://github.com/yourprofile'}],
     widget:'none',
   },
   {
@@ -577,9 +527,7 @@ const projects = [
     pills:['Signal Processing','STFT','LPC','PCA','K-Means','Vocal Biometrics'],
     abstract:<>Research mini-project on <strong>speech signal analysis</strong> grounded in a non-stationary signal framework. Examines both <strong>time domain</strong> (RMS Energy, Zero-Crossing Rate) and <strong>frequency domain</strong> (FFT, STFT spectrograms, formant extraction via LPC). Applies <strong>Machine Learning</strong> — PCA for dimensionality reduction and K-Means clustering — to investigate the relationship and grouping between logatomes according to consonant classification: plosives, fricatives, nasals, trills, and laterals.</>,
     eqs:['Time: RMS Energy, Zero-Crossing Rate (ZCR)','Spectral: FFT · STFT spectrogram · LPC formants','Dimensionality: PCA  →  K-Means phoneme clustering'],
-    links:[
-      {label:'↗ GitHub', href:'https://github.com/yourprofile'},
-    ],
+    links:[{label:'↗ GitHub', href:'https://github.com/yourprofile'}],
     widget:'none',
   },
 ];
@@ -603,7 +551,6 @@ function ResearchCard({p, expanded, onToggle}) {
       {expanded && (
         <div className="card-body">
           <div className="card-divider"/>
-          {/* Projects with widget use 2-col layout; text-only projects use full width */}
           {p.widget === 'none' ? (
             <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem'}}>
               <div>
@@ -788,12 +735,11 @@ function App() {
           <div className="section-line"/>
         </div>
         <div className="about-grid">
-          {/* BIO — wider column */}
           <div>
             <div className="glass about-card glass-hover">
               <div className="about-tag">Profile</div>
               <p className="about-bio">I am a physicist driven by curiosity about the <strong>fundamental mechanisms of nature</strong>. My motivation is to expand knowledge in biophysics and the modelling of biological systems, combining computational tools with analytical rigour and teamwork that has a direct impact on the scientific community.</p>
-              <p className="about-bio">My master's thesis studies the <strong>dynamics of action potential propagation in cardiac tissue</strong> using the FitzHugh-Nagumo model: from single-cell stability analysis and bifurcations to ECG synthesis via the central cardiac dipole, including 2D simulations on isotropic and anisotropic meshes, <strong>spiral wave formation</strong>, and realistic multi-region models (SA node, AV zone, bundle of His, and Purkinje system).</p>
+              <p className="about-bio">My TFG studies the <strong>dynamics of action potential propagation in cardiac tissue</strong> using the FitzHugh-Nagumo model: from single-cell stability analysis and bifurcations to ECG synthesis via the central cardiac dipole, including 2D simulations on isotropic and anisotropic meshes, <strong>spiral wave formation</strong>, and realistic multi-region models (SA node, AV zone, bundle of His, and Purkinje system).</p>
               <p className="about-bio">During my internship at the <strong>INCyL</strong> I worked on auditory software modelling and psychoacoustics, combining electroacoustic calibration, experimental design, and computational simulation of auditory processes.</p>
               <div className="contact-links">
                 <a href="mailto:your@email.com" className="contact-link"><span className="contact-icon">✉</span> your@email.com</a>
@@ -810,7 +756,6 @@ function App() {
               ))}
             </div>
           </div>
-          {/* SKILLS — narrower column, font matches about-bio */}
           <div className="glass skills-panel glass-hover">
             <div className="about-tag">Technical Stack</div>
             {[

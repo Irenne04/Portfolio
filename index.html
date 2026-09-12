@@ -87,9 +87,9 @@
     /* SKILLS — slightly smaller than about-bio */
     .skills-panel{padding:1.5rem;}
     .skill-group{margin-bottom:1.15rem;}
-    .skill-group-title{font-size:0.72rem;color:var(--accent-amber);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.55rem;}
+    .skill-group-title{font-size:0.62rem;color:var(--accent-amber);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.55rem;}
     .skill-tags{display:flex;flex-wrap:wrap;gap:0.35rem;}
-    .skill-tag{font-size:0.72rem;padding:0.24rem 0.6rem;background:rgba(126,184,247,0.05);border:1px solid var(--border);color:var(--text-secondary);transition:all 0.2s;cursor:default;}
+    .skill-tag{font-size:0.62rem;padding:0.22rem 0.55rem;background:rgba(126,184,247,0.05);border:1px solid var(--border);color:var(--text-secondary);transition:all 0.2s;cursor:default;}
     .skill-tag:hover{background:rgba(126,184,247,0.1);border-color:var(--accent-primary);color:var(--accent-primary);}
     .contact-links{display:flex;flex-direction:column;margin-top:1.5rem;}
     .contact-link{font-size:0.84rem;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:0.65rem;padding:0.52rem 0;border-bottom:1px solid var(--border);transition:color 0.2s;}
@@ -147,8 +147,8 @@
     /* SIM WIDGET */
     .sim-wrap{background:rgba(0,0,0,0.4);border:1px solid var(--border);padding:1.2rem;}
     .sim-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem;}
-    .sim-title{font-size:0.58rem;color:var(--accent-green);letter-spacing:0.2em;text-transform:uppercase;}
-    .sim-badge{font-size:0.5rem;padding:0.18rem 0.5rem;background:rgba(126,203,161,0.08);border:1px solid rgba(126,203,161,0.22);color:var(--accent-green);letter-spacing:0.1em;animation:blink 2.5s infinite;}
+    .sim-title{font-size:0.58rem;color:var(--accent-primary);letter-spacing:0.2em;text-transform:uppercase;}
+    .sim-badge{font-size:0.5rem;padding:0.18rem 0.5rem;background:rgba(126,184,247,0.08);border:1px solid rgba(126,184,247,0.22);color:var(--accent-primary);letter-spacing:0.1em;animation:blink 2.5s infinite;}
     .sim-canvas-box{width:100%;height:210px;background:var(--bg-void);border:1px solid rgba(126,184,247,0.07);position:relative;overflow:hidden;margin-bottom:0.9rem;}
     .sim-canvas-box canvas{display:block;width:100%;height:100%;}
     .sim-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;background:rgba(7,9,15,0.72);}
@@ -160,8 +160,9 @@
     .sim-controls{display:flex;flex-direction:column;gap:0.55rem;margin-top:0.5rem;}
     .sim-controls-row{display:flex;align-items:center;gap:0;width:100%;}
     .sim-lbl{font-size:0.62rem;color:var(--text-secondary);white-space:nowrap;width:120px;flex-shrink:0;}
-    .sim-slider{flex:1;-webkit-appearance:none;height:2px;background:var(--border);outline:none;margin:0 0.6rem;cursor:pointer;}
-    .sim-slider::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;background:var(--accent-primary);cursor:pointer;border-radius:0;}
+    .sim-slider{flex:1;appearance:none;-webkit-appearance:none;height:2px;background:var(--border);outline:none;margin:0 0.6rem;cursor:pointer;border:none;}
+    .sim-slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:11px;height:11px;background:var(--accent-primary);cursor:pointer;border-radius:0;border:none;}
+    .sim-slider::-moz-range-thumb{width:11px;height:11px;background:var(--accent-primary);cursor:pointer;border-radius:0;border:none;}
     .sim-val{font-size:0.62rem;color:var(--accent-primary);width:44px;text-align:right;flex-shrink:0;}
     .sim-btn{background:rgba(126,184,247,0.07);border:1px solid var(--border-bright);color:var(--accent-primary);padding:0.38rem 0.9rem;font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;align-self:flex-start;margin-top:0.3rem;}
     .sim-btn:hover{background:rgba(126,184,247,0.14);box-shadow:var(--glow-primary);}
@@ -171,13 +172,13 @@
     /* VIDEO PLAYER */
     .video-wrap{background:rgba(0,0,0,0.4);border:1px solid var(--border);padding:1.2rem;}
     .video-wrap video{width:100%;display:block;background:#000;border:1px solid rgba(126,184,247,0.1);}
-    .video-label{font-size:0.58rem;color:var(--accent-green);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.9rem;}
+    .video-label{font-size:0.58rem;color:var(--accent-primary);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.9rem;}
     .video-upload-label{display:block;border:1px dashed var(--border-bright);padding:0.8rem;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:0.8rem;background:rgba(126,184,247,0.02);}
     .video-upload-label:hover{background:rgba(126,184,247,0.06);border-color:var(--accent-primary);}
     .video-upload-label input{display:none;}
     .video-upload-icon{font-size:1.1rem;color:var(--accent-primary);opacity:0.4;margin-bottom:0.25rem;}
     .video-upload-txt{font-size:0.6rem;color:var(--text-muted);}
-    .video-upload-ok{font-size:0.62rem;color:var(--accent-green);margin-top:0.25rem;}
+    .video-upload-ok{font-size:0.62rem;color:var(--accent-amber);margin-top:0.25rem;}
 
     /* PUBLICATIONS */
     #publications{background:var(--bg-void);}
@@ -454,77 +455,53 @@ function FHNSingleCell() {
   );
 }
 
-/* ── PROJECT 2: Manual-loop video — wavefront propagation ── */
+/* ── PROJECT 2: video — wavefront propagation ── */
 function WavefrontVideoPlayer() {
   const ref = useRef(null);
   useEffect(() => {
-    const v = ref.current;
-    if (!v) return;
-    v.load();
-    const onCanPlay = () => v.play().catch(() => {});
-    const onEnded   = () => { v.currentTime = 0; v.play().catch(() => {}); };
-    v.addEventListener('canplay', onCanPlay, { once: true });
-    v.addEventListener('ended',   onEnded);
-    return () => {
-      v.removeEventListener('canplay', onCanPlay);
-      v.removeEventListener('ended',   onEnded);
-    };
+    const v = ref.current; if (!v) return;
+    const resume = () => { if (v.paused) v.play().catch(()=>{}); };
+    v.addEventListener('loadeddata', resume, {once:true});
+    return () => v.removeEventListener('loadeddata', resume);
   }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// 2D WAVEFRONT — SIGNAL PROPAGATION</div>
-      <video
-        ref={ref}
-        autoPlay muted playsInline controls preload="auto"
-        style={{width:'100%', display:'block', background:'#000',
-                border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
-        onEnded={e => { e.target.currentTime = 0; e.target.play().catch(() => {}); }}
-      >
-        <source src="assets/wavefront.webm" type="video/webm" />
-        <source src="assets/wavefront.mp4"  type="video/mp4" />
-        Your browser does not support the video tag.
+      <video ref={ref} autoPlay loop muted playsInline preload="auto"
+        onEnded={e=>{e.target.currentTime=0;e.target.play().catch(()=>{});}}
+        style={{width:'100%',display:'block',background:'#000',
+                border:'1px solid rgba(126,184,247,0.1)',maxHeight:'320px'}}>
+        <source src="assets/wavefront.webm" type="video/webm"/>
+        <source src="assets/wavefront.mp4"  type="video/mp4"/>
       </video>
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
-        <span className="sim-hint-kw">// FHN 2D numerical simulation.</span> Isotropic and anisotropic
-        meshes — wavefront propagation and spiral wave formation.
+        <span className="sim-hint-kw">// FHN 2D numerical simulation.</span> Isotropic and anisotropic meshes — wavefront propagation and spiral wave formation.
       </div>
     </div>
   );
 }
 
-/* ── PROJECT 3: Manual-loop video — ECG cardiac dipole reconstruction ── */
+/* ── PROJECT 3: video — ECG cardiac dipole reconstruction ── */
 function ECGVideoPlayer() {
   const ref = useRef(null);
   useEffect(() => {
-    const v = ref.current;
-    if (!v) return;
-    v.load();
-    const onCanPlay = () => v.play().catch(() => {});
-    const onEnded   = () => { v.currentTime = 0; v.play().catch(() => {}); };
-    v.addEventListener('canplay', onCanPlay, { once: true });
-    v.addEventListener('ended',   onEnded);
-    return () => {
-      v.removeEventListener('canplay', onCanPlay);
-      v.removeEventListener('ended',   onEnded);
-    };
+    const v = ref.current; if (!v) return;
+    const resume = () => { if (v.paused) v.play().catch(()=>{}); };
+    v.addEventListener('loadeddata', resume, {once:true});
+    return () => v.removeEventListener('loadeddata', resume);
   }, []);
   return (
     <div className="video-wrap">
       <div className="video-label">// ECG — CARDIAC DIPOLE RECONSTRUCTION</div>
-      <video
-        ref={ref}
-        autoPlay muted playsInline controls preload="auto"
-        style={{width:'100%', display:'block', background:'#000',
-                border:'1px solid rgba(126,184,247,0.1)', maxHeight:'320px'}}
-        onEnded={e => { e.target.currentTime = 0; e.target.play().catch(() => {}); }}
-      >
-        <source src="assets/ecg_dipole.webm" type="video/webm" />
-        <source src="assets/ecg_dipole.mp4"  type="video/mp4" />
-        Your browser does not support the video tag.
+      <video ref={ref} autoPlay loop muted playsInline preload="auto"
+        onEnded={e=>{e.target.currentTime=0;e.target.play().catch(()=>{});}}
+        style={{width:'100%',display:'block',background:'#000',
+                border:'1px solid rgba(126,184,247,0.1)',maxHeight:'320px'}}>
+        <source src="assets/ecg_dipole.webm" type="video/webm"/>
+        <source src="assets/ecg_dipole.mp4"  type="video/mp4"/>
       </video>
       <div className="sim-hint" style={{marginTop:'0.6rem'}}>
-        <span className="sim-hint-kw">// Synthetic ECG via central cardiac dipole formalism.</span> P–QRS–T
-        morphology reconstructed from the 2D FHN tissue dipole vector (TFG Chapter 4).
+        <span className="sim-hint-kw">// Synthetic ECG via central cardiac dipole formalism.</span> P–QRS–T morphology reconstructed from the 2D FHN tissue dipole vector (TFG Chapter 4).
       </div>
     </div>
   );
@@ -541,6 +518,7 @@ const projects = [
     abstract:<>Systematic characterisation of the <strong>cardiac FHN two-variable system</strong> (c₁=c₂=1) as a function of external current <em>I</em>, threshold <em>a</em>, and timescale <em>ε</em>. The cubic v-nullcline and linear w-nullcline intersect to define <strong>fixed points</strong> whose stability is determined by the Jacobian eigenvalues. As <em>I</em> increases past the threshold, a <strong>subcritical Hopf bifurcation</strong> transitions the cell from excitable to oscillatory regime — directly relevant to ectopic pacemaker behaviour in pathological cardiac tissue.</>,
     eqs:['dv/dt = v(1−v)(v−a) − w + I   [c₁=c₂=1]','dw/dt = ε(v − bw)','v-nullcline:  w = v(1−v)(v−a) + I','w-nullcline:  w = v / b'],
     links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'}],
+    widget:'single',
   },
   {
     id:'fhn-tfg',

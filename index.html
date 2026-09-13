@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portfolio — Biophysics & Complex Systems</title>
+  <!-- Añade esta línea justo debajo del title: -->
   <link rel="icon" type="image/png" href="./assets/logo.png" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -201,16 +202,16 @@
 <div class="scanline"></div>
 <nav id="nav">
   <div class="nav-logo" style="display: flex; align-items: center; gap: 8px;">
-  <img src="./assets/logo.png" alt="Logo" style="height: 16px; width: auto;" />
-  <span>// TU_APELLIDO_LAB</span>
-</div>
+    <img src="./assets/logo1.png" alt="Logo" style="height: 18px; width: auto;" />
+    <span>// IRENE_ReSearcher</span>
+  </div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#trajectory">Trajectory</a></li>
     <li><a href="#research">Research</a></li>
     <li><a href="#publications">Publications</a></li>
   </ul>
-  <div class="nav-status"><div class="status-dot"></div><span>🟢 RESEARCH READY</span></div>
+  <div class="nav-status"><div class="status-dot"></div><span>RESEARCH READY</span></div>
 </nav>
 <div id="root"></div>
 <script type="text/babel">
@@ -506,7 +507,7 @@ const projects = [
     pills:['Nullcline Analysis','Hopf Bifurcation','Excitability','Phase Portrait','Stability'],
     abstract:<span>Systematic characterisation of the <strong>cardiac FHN two-variable system</strong> (c₁=c₂=1) as a function of external current <em>I</em>, threshold <em>a</em>, and timescale <em>ε</em>. The cubic v-nullcline and linear w-nullcline intersect to define <strong>fixed points</strong> whose stability is determined by the Jacobian eigenvalues. As <em>I</em> increases past the threshold, a <strong>subcritical Hopf bifurcation</strong> transitions the cell from excitable to oscillatory regime — directly relevant to ectopic pacemaker behaviour in pathological cardiac tissue.</span>,
     eqs:['dv/dt = v(1−v)(v−a) − w + I   [c₁=c₂=1]','dw/dt = ε(v − bw)','v-nullcline:  w = v(1−v)(v−a) + I','w-nullcline:  w = v / b'],
-    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'}],
+    links:[{label:'↗ GitHub',href:'https://github.com/Irenne04/TFG-programas'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'}],
     widget:'single',
   },
   {
@@ -517,7 +518,7 @@ const projects = [
     pills:['FitzHugh-Nagumo','Excitable Media','PDE Numerics','Spiral Waves','Anisotropy','Cardiac Dipole'],
     abstract:<span>Studied the <strong>spatiotemporal propagation dynamics</strong> of cardiac action potentials using the FHN model. A <strong>2D diffusive PDE</strong> is solved on an <em>isotropic</em> mesh (conduction velocity analysis) and an <em>anisotropic</em> mesh (spiral wave formation). A <strong>realistic multi-region model</strong> (SA node → AV → His-Purkinje) is assembled by spatially modulating FHN parameters. The central cardiac dipole formalism reconstructs a <strong>synthetic ECG</strong> under physiological and abnormal conditions, rescaled for clinical comparison.</span>,
     eqs:['dv/dt = v(1−v)(v−a) − w + I   [single cell]','∂v/∂t = D∇²v + v(1−v)(v−a) − w + I   [2D PDE]','dw/dt = ε(v − bw)','⃗p(t) ∝ ∬ v(x,y,t) x̂ dA   [Cardiac dipole]'],
-    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'},{label:'↗ Poster PDF',href:'assets/pdfs/poster_innova2025.pdf'}],
+    links:[{label:'↗ GitHub',href:'https://github.com/Irenne04/TFG-programas'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'},{label:'↗ Poster PDF',href:'assets/pdfs/poster_innova2025.pdf'}],
     widget:'video-wave',
   },
   {
@@ -528,7 +529,7 @@ const projects = [
     pills:['ECG Synthesis','Cardiac Dipole','Signal Processing','Pathology Modelling','Clinical Validation'],
     abstract:<span>The <strong>central cardiac dipole</strong> vector is computed by integrating the spatial distribution of transmembrane potential <em>v(x,y,t)</em> across the simulated 2D tissue. The resulting waveform reproduces the canonical <strong>P–QRS–T morphology</strong> under normal parameters. Pathological regimes (altered conduction, blocked regions, spiral waves) produce recognisable ECG abnormalities — ST elevation, widened QRS, T-wave inversion — enabling biophysical interpretation of clinical ECG features. A spatio-temporal rescaling is applied for direct comparison with clinical reference data.</span>,
     eqs:['⃗p(t) = Σᵢ v(xᵢ,t) · x̂ᵢ ΔA','ECG(t) ≈ ⃗p(t) · n̂_lead'],
-    links:[{label:'↗ GitHub',href:'https://github.com/yourprofile'},{label:'↗ TFG Chapter 4',href:'assets/pdfs/tfg.pdf'}],
+    links:[{label:'↗ GitHub',href:'https://github.com/Irenne04/TFG-programas'},{label:'↗ TFG Chapter 4',href:'assets/pdfs/tfg.pdf'}],
     widget:'video-ecg',
   },
   {
@@ -539,7 +540,7 @@ const projects = [
     pills:['Power BI','MySQL','n8n','ETL','DAX','Foreign Investment'],
     abstract:<span>Comprehensive analysis of <strong>international investment flows and economic performance</strong> (2010–2021) focused on Spain, Portugal, and Italy. The pipeline automates exchange rate ingestion via <strong>n8n ETL</strong>, models data in Power Query, and computes advanced <strong>DAX metrics</strong> — including Revenue per Employee — to evaluate capital profitability and labour productivity without country-size bias. The interactive Power BI dashboard surfaces cross-country trends in FDI efficiency and sectoral performance.</span>,
     eqs:['Revenue per Employee = Total Revenue / Headcount   [DAX]','FDI Efficiency Index = FDI Inflow / GDP per capita','ETL: n8n → MySQL → Power Query → Power BI'],
-    links:[{label:'↗ GitHub', href:'https://github.com/yourprofile'}],
+    links:[{label:'↗ GitHub', href:'https://github.com/Irenne04/Analisis-de-Datos-de-MREID'}],
     widget:'none',
   },
   {
@@ -552,7 +553,7 @@ const projects = [
     eqs:['Hardware: RME Fireface (ASIO) + Sennheiser HD 280 PRO','Protocols: THI · TFI · VAS · Pitch match · 2AFC','Entry point: PROGRAMA_PRINCIPAL_ACUFENOMETRIAS.m'],
     links:[
       {label:'↗ Tinnitus Review PDF', href:'assets/pdfs/Tinnitus_Review.pdf'},
-      {label:'↗ GitHub (MATLAB)', href:'https://github.com/yourprofile'},
+      {label:'↗ GitHub (MATLAB)', href:'https://github.com/Irenne04/Tinnitus-Project'},
     ],
     widget:'none',
   },
@@ -564,7 +565,7 @@ const projects = [
     pills:['Signal Processing','STFT','LPC','PCA','K-Means','Vocal Biometrics'],
     abstract:<span>Research mini-project on <strong>speech signal analysis</strong> grounded in a non-stationary signal framework. Examines both <strong>time domain</strong> (RMS Energy, Zero-Crossing Rate) and <strong>frequency domain</strong> (FFT, STFT spectrograms, formant extraction via LPC). Applies <strong>Machine Learning</strong> — PCA for dimensionality reduction and K-Means clustering — to investigate the relationship and grouping between logatomes according to consonant classification: plosives, fricatives, nasals, trills, and laterals.</span>,
     eqs:['Time: RMS Energy, Zero-Crossing Rate (ZCR)','Spectral: FFT · STFT spectrogram · LPC formants','Dimensionality: PCA  →  K-Means phoneme clustering'],
-    links:[{label:'↗ GitHub', href:'https://github.com/yourprofile'}],
+    links:[{label:'↗ GitHub', href:'https://github.com/Irenne04/Analisis_voz_espectro'}],
     widget:'none',
   },
 ];
@@ -643,13 +644,6 @@ function ResearchCard({p, expanded, onToggle}) {
 /* ── TIMELINE DATA ── */
 const acItems = [
   {
-    date:'2021 — 2026',
-    role:'B.Sc. in Physics',
-    place:'University of Salamanca (USAL)',
-    desc:'Specialisation in complex systems, numerical simulation, and biophysics. Thesis on cardiac action potential propagation dynamics using the FHN model.',
-    badge:'Completed', badgeClass:'',
-  },
-  {
     date:'2026 — 2027',
     role:'M.Sc. in Physics of Complex Systems',
     place:'University of Barcelona (UB)',
@@ -657,8 +651,15 @@ const acItems = [
     badge:'In Progress', badgeClass:'tl-badge-amber',
   },
   {
+    date:'2021 — 2026',
+    role:'B.Sc. in Physics',
+    place:'University of Salamanca (USAL)',
+    desc:'Specialisation in complex systems, numerical simulation, and biophysics. Thesis on cardiac action potential propagation dynamics using the FHN model.',
+    badge:'Completed', badgeClass:'',
+  },
+  {
     date:'2025',
-    role:'Internship — Auditory Software Design and Modelling',
+    role:'Auditory Software Design and Modelling — Internship',
     place:'Institute of Neuroscience of Castilla y León (INCyL) · Salamanca',
     desc:'Electroacoustic calibration, signal editing, experiment design in psychoacoustics and human auditory electrophysiology, data analysis, auditory evaluation software development, and computational simulation of auditory processes.',
     badge:'Internship', badgeClass:'tl-badge-amber',

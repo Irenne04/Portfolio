@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portfolio — Biophysics & Complex Systems</title>
+  <link rel="icon" type="image/png" href="./assets/logo.png" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -199,14 +200,17 @@
 <body>
 <div class="scanline"></div>
 <nav id="nav">
-  <div class="nav-logo">// FHN_BIOPHYSICS_LAB</div>
+  <div class="nav-logo" style="display: flex; align-items: center; gap: 8px;">
+  <img src="./assets/logo.png" alt="Logo" style="height: 16px; width: auto;" />
+  <span>// TU_APELLIDO_LAB</span>
+</div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#trajectory">Trajectory</a></li>
     <li><a href="#research">Research</a></li>
     <li><a href="#publications">Publications</a></li>
   </ul>
-  <div class="nav-status"><div class="status-dot"></div><span>SIMULATOR READY</span></div>
+  <div class="nav-status"><div class="status-dot"></div><span>🟢 RESEARCH READY</span></div>
 </nav>
 <div id="root"></div>
 <script type="text/babel">

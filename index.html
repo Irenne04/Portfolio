@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio — Biophysics & Complex Systems</title>
+  <title>Portfolio — Irene ReSearcher</title>
   <!-- Añade esta línea justo debajo del title: -->
   <link rel="icon" type="image/png" href="./assets/logo.png" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -506,7 +506,7 @@ const projects = [
     sub:'Stability analysis of the cardiac FHN model: nullclines, fixed points, Hopf bifurcation, and excitability regimes as a function of system parameters.',
     pills:['Nullcline Analysis','Hopf Bifurcation','Excitability','Phase Portrait','Stability'],
     abstract:<span>Systematic characterisation of the <strong>cardiac FHN two-variable system</strong> (c₁=c₂=1) as a function of external current <em>I</em>, threshold <em>a</em>, and timescale <em>ε</em>. The cubic v-nullcline and linear w-nullcline intersect to define <strong>fixed points</strong> whose stability is determined by the Jacobian eigenvalues. As <em>I</em> increases past the threshold, a <strong>subcritical Hopf bifurcation</strong> transitions the cell from excitable to oscillatory regime — directly relevant to ectopic pacemaker behaviour in pathological cardiac tissue.</span>,
-    eqs:['dv/dt = v(1−v)(v−a) − w + I   [c₁=c₂=1]','dw/dt = ε(v − bw)','v-nullcline:  w = v(1−v)(v−a) + I','w-nullcline:  w = v / b'],
+    eqs:['dv/dt = c₁v(1−v)(v−a) − c₂w + I   [c₁=c₂=1]','dw/dt = ε(v − bw)','v-nullcline:  w = v(1−v)(v−a) + I','w-nullcline:  w = v / b'],
     links:[{label:'↗ GitHub',href:'https://github.com/Irenne04/TFG-programas'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'}],
     widget:'single',
   },
@@ -516,20 +516,24 @@ const projects = [
     title:'Action Potential Propagation in Cardiac Tissue via FHN Model',
     sub:"Final Degree Project (TFG) · USAL 2025–2026. Numerical simulation of the spatiotemporal dynamics of cardiac action potential propagation using the FitzHugh-Nagumo model.",
     pills:['FitzHugh-Nagumo','Excitable Media','PDE Numerics','Spiral Waves','Anisotropy','Cardiac Dipole'],
-    abstract:<span>Studied the <strong>spatiotemporal propagation dynamics</strong> of cardiac action potentials using the FHN model. A <strong>2D diffusive PDE</strong> is solved on an <em>isotropic</em> mesh (conduction velocity analysis) and an <em>anisotropic</em> mesh (spiral wave formation). A <strong>realistic multi-region model</strong> (SA node → AV → His-Purkinje) is assembled by spatially modulating FHN parameters. The central cardiac dipole formalism reconstructs a <strong>synthetic ECG</strong> under physiological and abnormal conditions, rescaled for clinical comparison.</span>,
-    eqs:['dv/dt = v(1−v)(v−a) − w + I   [single cell]','∂v/∂t = D∇²v + v(1−v)(v−a) − w + I   [2D PDE]','dw/dt = ε(v − bw)','⃗p(t) ∝ ∬ v(x,y,t) x̂ dA   [Cardiac dipole]'],
+    abstract:<span>Studied the <strong>spatiotemporal propagation dynamics</strong> of cardiac action potentials using the FHN model. A <strong>2D diffusive PDE</strong> is solved on an <em>isotropic</em> mesh (conduction velocity analysis) and an <em>anisotropic</em> mesh (spiral wave formation). A <strong>simplified multi-region model</strong> (SA node → AV) is assembled by spatially modulating FHN parameters. The central cardiac dipole formalism reconstructs a <strong>synthetic ECG</strong> under physiological and abnormal conditions, rescaled for clinical comparison.</span>,
+    eqs:['dv/dt = c₁v(1−v)(v−a) − c₂w + I   [c₁=c₂=1]','∂v/∂t = D∇²v + c₁v(1−v)(v−a) − c₂w + I   [2D PDE]','dw/dt = ε(v − bw)'],
     links:[{label:'↗ GitHub',href:'https://github.com/Irenne04/TFG-programas'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'},{label:'↗ Poster PDF',href:'assets/pdfs/poster_innova2025.pdf'}],
     widget:'video-wave',
   },
   {
     id:'ecg-synth',
     tag:'// PROJECT 3 — BIOMEDICAL SIGNALS',
-    title:'Synthetic ECG via Cardiac Dipole Formalism',
+    title:'Synthetic ECG via Cardiac Dipole Formalism in a Realistic FHN Tissue Model',
     sub:'Reconstruction of physiological and pathological ECG morphology from the FHN tissue dipole vector. Spatio-temporal rescaling for clinical comparison.',
     pills:['ECG Synthesis','Cardiac Dipole','Signal Processing','Pathology Modelling','Clinical Validation'],
-    abstract:<span>The <strong>central cardiac dipole</strong> vector is computed by integrating the spatial distribution of transmembrane potential <em>v(x,y,t)</em> across the simulated 2D tissue. The resulting waveform reproduces the canonical <strong>P–QRS–T morphology</strong> under normal parameters. Pathological regimes (altered conduction, blocked regions, spiral waves) produce recognisable ECG abnormalities — ST elevation, widened QRS, T-wave inversion — enabling biophysical interpretation of clinical ECG features. A spatio-temporal rescaling is applied for direct comparison with clinical reference data.</span>,
-    eqs:['⃗p(t) = Σᵢ v(xᵢ,t) · x̂ᵢ ΔA','ECG(t) ≈ ⃗p(t) · n̂_lead'],
-    links:[{label:'↗ GitHub',href:'https://github.com/Irenne04/TFG-programas'},{label:'↗ TFG Chapter 4',href:'assets/pdfs/tfg.pdf'}],
+    abstract:<span>The <strong>central cardiac dipole</strong> vector is computed by integrating the spatial distribution of transmembrane potential <em>v(x,y,t)</em> across the simulated 2D tissue (a <strong>realistic multi-region model</strong> (SA node → AV → HH → Purkinje) is assembled by spatially modulating FHN parameters). The resulting waveform reproduces the canonical <strong>P–QRS–T morphology</strong> under normal parameters. Pathological regimes (altered conduction, blocked regions, spiral waves) produce recognisable ECG abnormalities — ST elevation, widened QRS, T-wave inversion — enabling biophysical interpretation of clinical ECG features. A spatio-temporal rescaling is applied for direct comparison with clinical reference data.</span>,
+    eqs:[
+      'Mx(t) = Σᵢⱼ Dᵢⱼ (∂vᵢⱼ/∂t) (nx)ᵢⱼ (Δx)²', 
+      'My(t) = Σᵢⱼ Dᵢⱼ (∂vᵢⱼ/∂t) (ny)ᵢⱼ (Δx)²', 
+      'D(t) = Mx(t)cos(θ) + My(t)sin(θ)'
+    ],
+    links:[{label:'↗ GitHub',href:'https://github.com/Irenne04/TFG-programas'},{label:'↗ TFG PDF',href:'assets/pdfs/tfg.pdf'}],
     widget:'video-ecg',
   },
   {
@@ -659,7 +663,7 @@ const acItems = [
   },
   {
     date:'2025',
-    role:'Auditory Software Design and Modelling — Internship',
+    role:'Research Intern – Auditory Software Design and Modelling',
     place:'Institute of Neuroscience of Castilla y León (INCyL) · Salamanca',
     desc:'Electroacoustic calibration, signal editing, experiment design in psychoacoustics and human auditory electrophysiology, data analysis, auditory evaluation software development, and computational simulation of auditory processes.',
     badge:'Internship', badgeClass:'tl-badge-amber',
@@ -697,14 +701,14 @@ const acItems = [
 const confItems = [
   {
     date:'April 16–17, 2026',
-    role:'Poster Communication',
-    place:'Jornadas de Investigación de Castilla y León · León, Spain',
+    role:'Conference poster - Castilla y León Research Conference',
+    place:'University of biology, León, Spain',
     desc:'"Simulation of electrocardiographic signals using the FitzHugh-Nagumo model in two-dimensional tissues." TFG results: 2D propagation, spiral waves, ECG synthesis via cardiac dipole.',
     badge:'Poster', badgeClass:'',
   },
   {
-    date:'2025',
-    role:'IV International Conference of Young Researchers INNOVA',
+    date:'September 24-26, 2025',
+    role:'Conference poster - IV International Conference of Young Researchers INNOVA',
     place:'Centro Internacional del Español, Salamanca, Spain',
     desc:'"Spatiotemporal simulation of the action potential in cardiac cells." Single-cell FHN model, phase plane analysis, and excitability transitions as a function of system parameters.',
     badge:'Poster', badgeClass:'',
@@ -777,14 +781,13 @@ function App() {
             <div>
               <div className="glass about-card glass-hover">
                 <div className="about-tag">Profile</div>
-                <p className="about-bio">I am a physicist driven by curiosity about the <strong>fundamental mechanisms of nature</strong>. My motivation is to expand knowledge in biophysics and the modelling of biological systems, combining computational tools with analytical rigour and teamwork that has a direct impact on the scientific community.</p>
-                <p className="about-bio">My TFG studies the <strong>dynamics of action potential propagation in cardiac tissue</strong> using the FitzHugh-Nagumo model: from single-cell stability analysis and bifurcations to ECG synthesis via the central cardiac dipole, including 2D simulations on isotropic and anisotropic meshes, <strong>spiral wave formation</strong>, and realistic multi-region models (SA node, AV zone, bundle of His, and Purkinje system).</p>
-                <p className="about-bio">During my internship at the <strong>INCyL</strong> I worked on auditory software modelling and psychoacoustics, combining electroacoustic calibration, experimental design, and computational simulation of auditory processes.</p>
+                <p className="about-bio">I am a <strong>physicist</strong> driven by curiosity and a desire to understand how things work—specifically, the fundamental mechanisms of nature. I am motivated by a commitment to continuous learning and professional growth, particularly in the fields of <strong>biophysics and the modeling of complex systems, combining computational methods with analytical rigor</strong>.</p>
+                <p className="about-bio">I am interested in <strong>research</strong> that makes a tangible impact on the community and offers practical solutions, grounded in a <strong>multidisciplinary</strong> approach and a comprehensive understanding of the entire project lifecycle.</p>
                 <div className="contact-links">
                   <a href="mailto:rodrisan.4mr@gmail.com" className="contact-link"><span className="contact-icon">✉</span> rodrisan.4mr@gmail.com</a>
                   <a href="https://www.linkedin.com/in/irene-rodsan04/" className="contact-link" target="_blank"><span className="contact-icon">in</span> linkedin.com/in/irene-rodsan04</a>
                   <a href="https://github.com/Irenne04" className="contact-link" target="_blank"><span className="contact-icon">⌥</span> github.com/Irenne04</a>
-                  <a href="#" className="contact-link"><span className="contact-icon">◉</span> ORCID / ResearchGate</a>
+                  <a href="https://orcid.org/0009-0009-3117-6707" className="contact-link"><span className="contact-icon">◉</span> ORCID / 0009-0009-3117-6707</a>
                   <a href="assets/pdfs/cv.pdf" className="contact-link" target="_blank"><span className="contact-icon">↗</span> Curriculum Vitae (PDF)</a>
                   <a href="assets/pdfs/tfg.pdf" className="contact-link" target="_blank"><span className="contact-icon">↗</span> Final Degree Project — TFG (PDF)</a>
                 </div>
